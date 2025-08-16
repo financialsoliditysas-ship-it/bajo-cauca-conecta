@@ -13,21 +13,26 @@ export default function Page() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    // Reset to first page whenever the search params change
     setPage(1);
   }, [sp.toString()]);
 
+  // Filter listings based on query, category, and municipality
   const filtered = useMemo(() => {
     const q = (sp.get("q") ?? "").toLowerCase();
     const categoria = sp.get("categoria");
     const municipio = sp.get("municipio");
     return listings.filter((it) => {
-      const matchQ = q ? (it.title.toLowerCase().includes(q) || it.description.toLowerCase().includes(q)) : true;
+      const matchQ = q
+        ? it.title.toLowerCase().includes(q) || it.description.toLowerCase().includes(q)
+        : true;
       const matchC = categoria ? it.categoria === categoria : true;
       const matchM = municipio ? it.municipio === municipio : true;
       return matchQ && matchC && matchM;
     });
   }, [sp]);
 
+  // Paginate the filtered results
   const paginated = useMemo(() => {
     const start = (page - 1) * PER_PAGE;
     return filtered.slice(start, start + PER_PAGE);
@@ -43,9 +48,16 @@ export default function Page() {
       </div>
       <FilterBar />
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-6">
-        {paginated.map((item) => <ListingCard key={item.id} item={item} />)}
+        {paginated.map((item) => (
+          <ListingCard key={item.id} item={item} />
+        ))}
       </div>
-      <Pagination total={filtered.length} page={page} perPage={PER_PAGE} onPageChange={setPage} />
+      <Pagination
+        total={filtered.length}
+        page={page}
+        perPage={PER_PAGE}
+        onPageChange={setPage}
+      />
     </div>
   );
 }
