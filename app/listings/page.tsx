@@ -1,5 +1,6 @@
 "use client";
 
+
 import { Suspense, useEffect, useMemo, useState } from "react";
 import FilterBar from "@/components/FilterBar";
 import ListingCard from "@/components/ListingCard";
@@ -57,7 +58,7 @@ function ListingsContent() {
       <Pagination
         total={filtered.length}
         perPage={PER_PAGE}
-       Page={page}
+       age={page}
         onPageChange={setPage}
       />
     </div>
