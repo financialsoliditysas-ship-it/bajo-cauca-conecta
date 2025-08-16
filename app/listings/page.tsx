@@ -57,7 +57,7 @@ function ListingsContent() {
       <Pagination
         total={filtered.length}
         perPage={PER_PAGE}
-        currentPage={page}
+       Page={page}
         onPageChange={setPage}
       />
     </div>
