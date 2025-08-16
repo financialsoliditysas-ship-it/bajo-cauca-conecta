@@ -1,7 +1,8 @@
 import { listings } from "@/data/items";
 import { notFound } from "next/navigation";
 
-type Props = { params: { id: string } };
+// Props type
+ type Props = { params: { id: string } };
 
 export async function generateMetadata({ params }: Props) {
   const item = listings.find((x) => x.id === params.id);
@@ -17,8 +18,13 @@ export default function Page({ params }: Props) {
   if (!item) return notFound();
 
   return (
-    <div className="container py-10 grid md:grid-cols-2 gap-8">rounded-2xl overflow-hidden border">
-        <img src={item.image} alt={item.title} className="w-full h-[360px] object-cover" />
+    <div className="container py-10 grid md:grid-cols-2 gap-8">
+      <div className="rounded-2xl overflow-hidden border">
+        <img
+          src={item.image}
+          alt={item.title}
+          className="w-full h-[360px] object-cover"
+        />
       </div>
       <div>
         <h1 className="text-2xl font-bold">{item.title}</h1>
@@ -27,7 +33,10 @@ export default function Page({ params }: Props) {
           Municipio: {item.municipio} - Categoria: {item.categoria}
         </div>
         <div className="mt-6">
-          <a href="/contacto" className="inline-flex items-center rounded-xl px-5 py-3 bg-sky-600 text-white hover:bg-sky-700">
+          <a
+            href="/contacto"
+            className="inline-flex items-center rounded-xl px-5 py-3 bg-sky-600 text-white hover:bg-sky-700"
+          >
             Contactar
           </a>
         </div>
