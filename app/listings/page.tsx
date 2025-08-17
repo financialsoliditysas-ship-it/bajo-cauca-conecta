@@ -1,32 +1,37 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import FilterBar from "@/components/FilterBar";
 import ListingCard from "@/components/ListingCard";
-import Pagination from "@/components/Pagination";
 import { listings } from "@/data/items";
+import Pagination from "@/components/Pagination";
+import { useSearchParams } from "next/navigation";
 
 const PER_PAGE = 12;
 
 function ListingsInner() {
-  const search = useSearchParams();
-  const page = Number(search.get("page") || "1");
-  const q = (search.get("q") || "").toLowerCase();
-  const municipio = search.get("municipio") || "";
-  const categoria = search.get("categoria") || "";
+  const sp = useSearchParams();
+  const [page, setPage] = useState(1);
 
+  // Reset the page when the search params change
+  useEffect(() => {
+    setPage(1);
+  }, [sp.toString()]);
+
+  // Filter listings based on query, category and municipality
   const filtered = useMemo(() => {
+    const q = (sp.get("q") ?? "").toLowerCase();
+    const municipio = sp.get("municipio") ?? "";
+    const categoria = sp.get("categoria") ?? "";
     return listings.filter((it) => {
-      const okQ = q
-        ? (it.title?.toLowerCase().includes(q) ||
-           it.description?.toLowerCase().includes(q))
+      const matchQ = q
+        ? it.title.toLowerCase().includes(q) || it.description.toLowerCase().includes(q)
         : true;
-      const okM = municipio ? it.municipio === municipio : true;
-      const okC = categoria ? it.categoria === categoria : true;
-      return okQ && okM && okC;
+      const matchM = municipio ? it.municipio === municipio : true;
+      const matchC = categoria ? it.categoria === categoria : true;
+      return matchQ && matchM && matchC;
     });
-  }, [q, municipio, categoria]);
+  }, [sp]);
 
   const total = filtered.length;
   const start = (page - 1) * PER_PAGE;
@@ -45,7 +50,12 @@ function ListingsInner() {
             ))}
           </div>
           <div className="mt-10 flex justify-center">
-            <Pagination total={total} page={page} perPage={PER_PAGE} />
+            <Pagination
+              total={total}
+              page={page}
+              perPage={PER_PAGE}
+              onPageChange={setPage}
+            />
           </div>
         </>
       )}
