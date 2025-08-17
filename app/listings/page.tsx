@@ -1,75 +1,62 @@
 "use client";
 
-
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
 import FilterBar from "@/components/FilterBar";
 import ListingCard from "@/components/ListingCard";
-import { listings } from "@/data/items";
 import Pagination from "@/components/Pagination";
-import { useSearchParams } from "next/navigation";
+import { listings } from "@/data/items";
 
 const PER_PAGE = 12;
 
-// Separate component that uses useSearchParams, wrapped in Suspense
-function ListingsContent() {
-  const sp = useSearchParams();
-  const [page, setPage] = useState(1);
+function ListingsInner() {
+  const search = useSearchParams();
+  const page = Number(search.get("page") || "1");
+  const q = (search.get("q") || "").toLowerCase();
+  const municipio = search.get("municipio") || "";
+  const categoria = search.get("categoria") || "";
 
-  // Reset page when search params change
-  useEffect(() => {
-    setPage(1);
-  }, [sp.toString()]);
-
-  // Filter listings based on query, category, and municipality
   const filtered = useMemo(() => {
-    const q = (sp.get("q") ?? "").toLowerCase();
-    const categoria = sp.get("categoria");
-    const municipio = sp.get("municipio");
     return listings.filter((it) => {
-      const matchQ = q
-        ? it.title.toLowerCase().includes(q) || it.description.toLowerCase().includes(q)
+      const okQ = q
+        ? (it.title?.toLowerCase().includes(q) ||
+           it.description?.toLowerCase().includes(q))
         : true;
-      const matchC = categoria ? it.categoria === categoria : true;
-      const matchM = municipio ? it.municipio === municipio : true;
-      return matchQ && matchC && matchM;
+      const okM = municipio ? it.municipio === municipio : true;
+      const okC = categoria ? it.categoria === categoria : true;
+      return okQ && okM && okC;
     });
-  }, [sp]);
+  }, [q, municipio, categoria]);
 
-  // Paginate the filtered results
-  const paginated = useMemo(() => {
-    const start = (page - 1) * PER_PAGE;
-    return filtered.slice(start, start + PER_PAGE);
-  }, [filtered, page]);
+  const total = filtered.length;
+  const start = (page - 1) * PER_PAGE;
+  const paged = filtered.slice(start, start + PER_PAGE);
 
   return (
     <div className="container py-10">
-      <div className="flex items-end justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold">Listados</h1>
-          <p className="mt-2 text-slate-600">{filtered.length} resultados encontrados</p>
-        </div>
-        <FilterBar />
-      </div>
-      <div className="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {paginated.map((item) => (
-          <ListingCard key={item.id} item={item} />
-        ))}
-      </div>
-      <Pagination
-        total={filtered.length}
-        perPage={PER_PAGE}
-       age={page}
-        onPageChange={setPage}
-      />
+      <FilterBar />
+      {paged.length === 0 ? (
+        <div className="mt-10 text-slate-600">No hay resultados.</div>
+      ) : (
+        <>
+          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {paged.map((item) => (
+              <ListingCard key={item.id} item={item} />
+            ))}
+          </div>
+          <div className="mt-10 flex justify-center">
+            <Pagination total={total} page={page} perPage={PER_PAGE} />
+          </div>
+        </>
+      )}
     </div>
   );
 }
 
 export default function Page() {
-  // Wrap in Suspense to satisfy useSearchParams requirement
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <ListingsContent />
+    <Suspense fallback={<div className="container py-10">Cargando…</div>}>
+      <ListingsInner />
     </Suspense>
   );
 }
