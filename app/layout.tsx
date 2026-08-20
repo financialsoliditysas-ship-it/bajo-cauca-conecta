@@ -32,9 +32,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Link href="/#inscripcion" className="hover:text-emerald-700">
                 Inscribir
               </Link>
-              <Link href="/listings" className="hover:text-emerald-700">
-                Marketplace
-              </Link>
             </nav>
           </div>
         </header>
