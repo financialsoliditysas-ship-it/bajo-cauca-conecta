@@ -1,8 +1,9 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   DirectoryCategory,
+  DirectoryBusiness,
   directoryBusinesses,
   directoryCategories
 } from "@/data/directory";
@@ -40,11 +41,49 @@ export default function MercauDirectory() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [businesses, setBusinesses] =
+    useState<DirectoryBusiness[]>(directoryBusinesses);
+  const [directoryStatus, setDirectoryStatus] = useState(
+    "Cargando negocios aprobados..."
+  );
+
+  async function loadBusinesses() {
+    try {
+      const response = await fetch("/api/negocios", { cache: "no-store" });
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "No se pudo cargar el directorio.");
+      }
+
+      if (Array.isArray(result.businesses) && result.businesses.length > 0) {
+        setBusinesses(result.businesses);
+        setDirectoryStatus(
+          "Mostrando negocios aprobados desde Airtable."
+        );
+        return;
+      }
+
+      setBusinesses([]);
+      setDirectoryStatus(
+        "Todavia no hay negocios aprobados para mostrar."
+      );
+    } catch (error) {
+      setBusinesses(directoryBusinesses);
+      setDirectoryStatus(
+        "No se pudo cargar Airtable. Mostrando datos demo temporalmente."
+      );
+    }
+  }
+
+  useEffect(() => {
+    loadBusinesses();
+  }, []);
 
   const filteredBusinesses = useMemo(() => {
     const term = normalize(query);
 
-    return directoryBusinesses.filter((business) => {
+    return businesses.filter((business) => {
       const categoryMatches = activeCategory
         ? business.category === activeCategory
         : true;
@@ -60,7 +99,7 @@ export default function MercauDirectory() {
 
       return categoryMatches && (!term || searchable.includes(term));
     });
-  }, [activeCategory, query]);
+  }, [activeCategory, businesses, query]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -84,6 +123,7 @@ export default function MercauDirectory() {
 
       form.reset();
       setStatus("Inscripcion recibida. Queda pendiente de revision.");
+      loadBusinesses();
     } catch (error) {
       setStatus(
         "No se pudo conectar con Airtable en este entorno. Revisa las variables de Vercel."
@@ -215,8 +255,7 @@ export default function MercauDirectory() {
             </button>
           </div>
           <p className="mt-4 max-w-3xl leading-7 text-slate-600">
-            Los registros demo estan marcados como no verificados. Reemplazalos
-            por negocios reales antes de usar el directorio como fuente publica.
+            {directoryStatus}
           </p>
 
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -261,6 +300,11 @@ export default function MercauDirectory() {
               </article>
             ))}
           </div>
+          {filteredBusinesses.length === 0 ? (
+            <div className="mt-8 rounded-lg border border-emerald-200 bg-white p-5 text-slate-700">
+              No encontramos negocios con ese filtro.
+            </div>
+          ) : null}
         </div>
       </section>
 

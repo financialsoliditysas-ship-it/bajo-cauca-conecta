@@ -18,7 +18,7 @@ export type DirectoryBusiness = {
   hours: string;
   whatsapp: string;
   status: "Verificado" | "Destacado";
-  source: "Demo no verificado";
+  source: string;
 };
 
 export const directoryCategories: Array<{
