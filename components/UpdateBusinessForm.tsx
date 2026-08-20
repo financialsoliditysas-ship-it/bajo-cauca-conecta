@@ -48,11 +48,28 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus("Enviando solicitud...");
 
     const form = event.currentTarget;
     const payload = Object.fromEntries(new FormData(form).entries());
+    const hasChanges = [
+      "requestedChanges",
+      "newDescription",
+      "newWhatsapp",
+      "newNeighborhood",
+      "newHours",
+      "deliveries",
+      "instagram",
+      "facebook",
+      "mapsUrl"
+    ].some((field) => String(payload[field] || "").trim());
+
+    if (!hasChanges) {
+      setSubmitStatus("Escribe al menos un dato para actualizar.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus("Enviando solicitud...");
 
     try {
       const response = await fetch(`/api/actualizaciones/${token}`, {
@@ -133,7 +150,6 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
               Qué quieres cambiar
               <textarea
                 name="requestedChanges"
-                required
                 rows={5}
                 placeholder="Ejemplo: cambie de numero, ahora atiendo hasta las 9 p.m. y hago domicilios."
                 className="rounded-lg border px-4 py-3 font-normal"

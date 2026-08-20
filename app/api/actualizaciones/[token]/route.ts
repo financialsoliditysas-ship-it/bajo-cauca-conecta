@@ -159,10 +159,31 @@ export async function POST(
   const fields = lookup.record.fields || {};
   const businessName = cleanText(fields[NEGOCIOS_FIELD_IDS.businessName], 120);
   const requestedChanges = cleanText(body.requestedChanges, 1200);
+  const newDescription = cleanText(body.newDescription, 700);
+  const newWhatsapp = normalizePhone(body.newWhatsapp);
+  const newNeighborhood = cleanText(body.newNeighborhood, 120);
+  const newHours = cleanText(body.newHours, 100);
+  const deliveries =
+    body.deliveries === "Si" ? "Si" : body.deliveries === "No" ? "No" : "";
+  const instagram = cleanText(body.instagram, 180);
+  const facebook = cleanText(body.facebook, 180);
+  const mapsUrl = cleanText(body.mapsUrl, 240);
 
-  if (!requestedChanges) {
+  const hasChanges = [
+    requestedChanges,
+    newDescription,
+    newWhatsapp,
+    newNeighborhood,
+    newHours,
+    deliveries,
+    instagram,
+    facebook,
+    mapsUrl
+  ].some(Boolean);
+
+  if (!hasChanges) {
     return NextResponse.json(
-      { error: "Cuéntanos qué información quieres cambiar." },
+      { error: "Escribe al menos un dato para actualizar." },
       { status: 400 }
     );
   }
@@ -173,15 +194,14 @@ export async function POST(
     [SOLICITUD_FIELD_IDS.status]: "Pendiente",
     [SOLICITUD_FIELD_IDS.confirmationWhatsapp]: normalizePhone(body.confirmationWhatsapp),
     [SOLICITUD_FIELD_IDS.requestedChanges]: requestedChanges,
-    [SOLICITUD_FIELD_IDS.newDescription]: cleanText(body.newDescription, 700),
-    [SOLICITUD_FIELD_IDS.newWhatsapp]: normalizePhone(body.newWhatsapp),
-    [SOLICITUD_FIELD_IDS.newNeighborhood]: cleanText(body.newNeighborhood, 120),
-    [SOLICITUD_FIELD_IDS.newHours]: cleanText(body.newHours, 100),
-    [SOLICITUD_FIELD_IDS.deliveries]:
-      body.deliveries === "Si" ? "Si" : body.deliveries === "No" ? "No" : "",
-    [SOLICITUD_FIELD_IDS.instagram]: cleanText(body.instagram, 180),
-    [SOLICITUD_FIELD_IDS.facebook]: cleanText(body.facebook, 180),
-    [SOLICITUD_FIELD_IDS.mapsUrl]: cleanText(body.mapsUrl, 240),
+    [SOLICITUD_FIELD_IDS.newDescription]: newDescription,
+    [SOLICITUD_FIELD_IDS.newWhatsapp]: newWhatsapp,
+    [SOLICITUD_FIELD_IDS.newNeighborhood]: newNeighborhood,
+    [SOLICITUD_FIELD_IDS.newHours]: newHours,
+    [SOLICITUD_FIELD_IDS.deliveries]: deliveries,
+    [SOLICITUD_FIELD_IDS.instagram]: instagram,
+    [SOLICITUD_FIELD_IDS.facebook]: facebook,
+    [SOLICITUD_FIELD_IDS.mapsUrl]: mapsUrl,
     [SOLICITUD_FIELD_IDS.internalComment]:
       "Solicitud recibida desde link privado. Revisar antes de aplicar en la ficha publica."
   };
