@@ -47,6 +47,17 @@ function socialUrl(value: string | undefined, network: "instagram" | "facebook")
     : `https://facebook.com/${handle}`;
 }
 
+function trackMetric(payload: Record<string, string>) {
+  fetch("/api/metricas", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      path: typeof window !== "undefined" ? window.location.pathname : "/",
+      ...payload
+    })
+  }).catch(() => {});
+}
+
 export default function MercauDirectory() {
   const [activeCategory, setActiveCategory] = useState<DirectoryCategory | "">("");
   const [query, setQuery] = useState("");
@@ -89,6 +100,7 @@ export default function MercauDirectory() {
 
   useEffect(() => {
     loadBusinesses();
+    trackMetric({ type: "Visita", notes: "Home directorio" });
   }, []);
 
   const filteredBusinesses = useMemo(() => {
@@ -134,6 +146,11 @@ export default function MercauDirectory() {
 
       form.reset();
       setStatus("Inscripcion recibida. Queda pendiente de revision.");
+      trackMetric({
+        type: "Inscripcion enviada",
+        businessName: String(payload.businessName || ""),
+        category: String(payload.category || "")
+      });
       loadBusinesses();
     } catch (error) {
       setStatus(
@@ -209,11 +226,16 @@ export default function MercauDirectory() {
               <button
                 key={category.name}
                 type="button"
-                onClick={() =>
+                onClick={() => {
                   setActiveCategory((current) =>
                     current === category.name ? "" : category.name
-                  )
-                }
+                  );
+                  trackMetric({
+                    type: "Categoria",
+                    category: category.name,
+                    search: query
+                  });
+                }}
                 className={`flex min-h-28 items-center gap-4 rounded-lg border bg-white p-5 text-left shadow-soft transition ${
                   activeCategory === category.name
                     ? "border-emerald-700 ring-4 ring-emerald-700/10"
@@ -319,6 +341,14 @@ export default function MercauDirectory() {
                     href={whatsappUrl(business.whatsapp, business.name)}
                     target="_blank"
                     rel="noreferrer"
+                    onClick={() =>
+                      trackMetric({
+                        type: "Clic WhatsApp",
+                        businessId: business.id,
+                        businessName: business.name,
+                        category: business.category
+                      })
+                    }
                     className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-300 px-4 font-extrabold text-emerald-950"
                   >
                     WhatsApp
