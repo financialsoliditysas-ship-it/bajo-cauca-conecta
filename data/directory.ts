@@ -89,7 +89,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-moda-local",
     name: "Demo Moda Local",
     category: "Moda",
-    neighborhood: "Nechi",
+    neighborhood: "Nechí",
     description: "Registro demo para mostrar tiendas de ropa, calzado y accesorios.",
     hours: "Consultar por WhatsApp",
     whatsapp: "+573000000005",

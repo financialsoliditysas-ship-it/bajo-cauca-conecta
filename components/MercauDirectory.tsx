@@ -167,7 +167,7 @@ export default function MercauDirectory() {
         <div className="container grid min-h-[calc(100vh-68px)] gap-10 py-16 md:grid-cols-[1.15fr_0.85fr] md:items-end md:py-24">
           <div>
             <p className="text-sm font-extrabold uppercase tracking-normal text-amber-300">
-              Piloto Nechi
+              Piloto Nechí
             </p>
             <img
               src="/logo-mercau.png"
@@ -178,7 +178,7 @@ export default function MercauDirectory() {
               Mercáu
             </h1>
             <p className="mt-5 text-3xl font-black leading-tight sm:text-4xl">
-              El directorio digital de Nechi
+              El directorio digital de Nechí
             </p>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-emerald-50/85">
               Encuentra negocios locales por categoria, contacta por WhatsApp y
@@ -268,7 +268,7 @@ export default function MercauDirectory() {
             Directorio
           </p>
           <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
-            Negocios visibles en Nechi
+            Negocios visibles en Nechí
           </h2>
           <div className="mt-8 flex flex-wrap gap-3">
             <label className="grid flex-1 basis-80 gap-2 font-bold">
@@ -413,7 +413,7 @@ export default function MercauDirectory() {
               Inscripcion gratuita
             </p>
             <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
-              Agrega tu negocio al Directorio Digital de Nechi
+              Agrega tu negocio al Directorio Digital de Nechí
             </h2>
             <p className="mt-5 max-w-xl leading-8 text-slate-600">
               Tu solicitud queda como pendiente para revision. Cuando sea
@@ -488,7 +488,7 @@ export default function MercauDirectory() {
               <input
                 name="facebook"
                 type="text"
-                placeholder="Mi Negocio Nechi o facebook.com/minegocio"
+                placeholder="Mi Negocio Nechí o facebook.com/minegocio"
                 className="rounded-lg border px-4 py-3 font-normal"
               />
             </label>

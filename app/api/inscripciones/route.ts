@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
     [FIELD_IDS.ownerName]: ownerName,
     [FIELD_IDS.whatsapp]: whatsapp,
     [FIELD_IDS.category]: category,
-    [FIELD_IDS.municipality]: "Nechi",
+    [FIELD_IDS.municipality]: "Nechí",
     [FIELD_IDS.neighborhood]: cleanText(body.neighborhood, 100),
     [FIELD_IDS.description]: cleanText(body.description, 600),
     [FIELD_IDS.hours]: cleanText(body.hours, 80) || "Consultar por WhatsApp",

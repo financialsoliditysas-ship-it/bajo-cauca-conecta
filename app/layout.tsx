@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Mercáu | Directorio Digital de Nechi",
+  title: "Mercáu | Directorio Digital de Nechí",
   description:
-    "Mercáu es el directorio digital de Nechi para encontrar negocios locales, contactar por WhatsApp e inscribir comercios.",
+    "Mercáu es el directorio digital de Nechí para encontrar negocios locales, contactar por WhatsApp e inscribir comercios.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://bajo-cauca-conecta.vercel.app"
   )
@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <footer className="border-t bg-white">
           <div className="container flex flex-wrap justify-between gap-3 py-8 text-sm text-slate-600">
             <strong className="text-slate-900">Mercáu</strong>
-            <span>Directorio Digital de Nechi. MVP para validar visibilidad, inscripciones y contacto local.</span>
+            <span>Directorio Digital de Nechí. MVP para validar visibilidad, inscripciones y contacto local.</span>
           </div>
         </footer>
       </body>

@@ -163,7 +163,7 @@ export async function GET() {
         category,
         neighborhood:
           text(appliedUpdate, UPDATE_FIELD_IDS.newNeighborhood) ||
-          text(fields, FIELD_IDS.neighborhood, "Nechi"),
+          text(fields, FIELD_IDS.neighborhood, "Nechí"),
         description:
           text(appliedUpdate, UPDATE_FIELD_IDS.newDescription) ||
           text(appliedUpdate, UPDATE_FIELD_IDS.requestedChanges) ||
