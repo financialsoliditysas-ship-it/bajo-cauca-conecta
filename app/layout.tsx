@@ -1,32 +1,46 @@
-import '../styles/globals.css';
+import "../styles/globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Bajo Cauca Conecta",
-  description: "Marketplace local para conectar productos y servicios del Bajo Cauca Antioqueño.",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com")
+  title: "Mercaú | Directorio Digital de Nechi",
+  description:
+    "Mercaú es el directorio digital de Nechi para encontrar negocios locales, contactar por WhatsApp e inscribir comercios.",
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://bajo-cauca-conecta.vercel.app"
+  )
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className="min-h-screen flex flex-col">
-        <header className="border-b bg-white/60 backdrop-blur supports-[backdrop-filter]:bg-white/80 sticky top-0 z-50">
+      <body className="min-h-screen bg-white text-slate-900 antialiased">
+        <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
           <div className="container flex items-center justify-between py-3">
-            <Link href="/" className="font-bold text-xl tracking-tight">
-              Bajo Cauca <span className="text-sky-600">Conecta</span>
+            <Link href="/" className="flex items-center gap-3 font-black text-xl tracking-tight">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-emerald-700 text-white">
+                M
+              </span>
+              <span>Mercaú</span>
             </Link>
-            <nav className="flex gap-4 text-sm">
-              <Link href="/listings" className="hover:text-sky-700">Listados</Link>
-              <Link href="/contacto" className="hover:text-sky-700">Contacto</Link>
+            <nav className="flex gap-4 text-sm font-bold text-slate-600">
+              <Link href="/#directorio" className="hover:text-emerald-700">
+                Directorio
+              </Link>
+              <Link href="/#inscripcion" className="hover:text-emerald-700">
+                Inscribir
+              </Link>
+              <Link href="/listings" className="hover:text-emerald-700">
+                Marketplace
+              </Link>
             </nav>
           </div>
         </header>
-        <main className="flex-1">{children}</main>
-        <footer className="border-t mt-10">
-          <div className="container py-8 text-sm text-slate-600">
-            © {new Date().getFullYear()} Bajo Cauca Conecta — Hecho con Next.js
+        <main>{children}</main>
+        <footer className="border-t bg-white">
+          <div className="container flex flex-wrap justify-between gap-3 py-8 text-sm text-slate-600">
+            <strong className="text-slate-900">Mercaú</strong>
+            <span>Directorio Digital de Nechi. MVP para validar visibilidad, inscripciones y contacto local.</span>
           </div>
         </footer>
       </body>
