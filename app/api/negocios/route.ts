@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const FIELD_IDS = {
   businessName: "fldZAuId3Z7tmNg1y",
   whatsapp: "fldCe1uBzTZhUZQMj",
@@ -39,6 +41,7 @@ export async function GET() {
 
   const params = new URLSearchParams({
     pageSize: "100",
+    returnFieldsByFieldId: "true",
     filterByFormula:
       "OR({Estado} = 'Verificado', {Estado} = 'Destacado')"
   });
@@ -49,7 +52,7 @@ export async function GET() {
       headers: {
         Authorization: `Bearer ${token}`
       },
-      next: { revalidate: 30 }
+      cache: "no-store"
     }
   );
 
