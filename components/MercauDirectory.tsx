@@ -36,6 +36,17 @@ function whatsappUrl(phone: string, businessName: string) {
   return `https://wa.me/${cleaned}?text=${text}`;
 }
 
+function socialUrl(value: string | undefined, network: "instagram" | "facebook") {
+  const clean = String(value || "").trim();
+  if (!clean) return "";
+  if (/^https?:\/\//i.test(clean)) return clean;
+
+  const handle = clean.replace(/^@/, "").replace(/^\/+/, "");
+  return network === "instagram"
+    ? `https://instagram.com/${handle}`
+    : `https://facebook.com/${handle}`;
+}
+
 export default function MercauDirectory() {
   const [activeCategory, setActiveCategory] = useState<DirectoryCategory | "">("");
   const [query, setQuery] = useState("");
@@ -262,26 +273,48 @@ export default function MercauDirectory() {
             {filteredBusinesses.map((business) => (
               <article
                 key={business.id}
-                className="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft"
+                className="flex min-h-full flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft"
               >
-                <div className="flex flex-wrap gap-2 text-xs font-extrabold">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
                   <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
                     {business.category}
                   </span>
-                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
+                  <span
+                    className={`rounded-full px-3 py-1 ${
+                      business.status === "Destacado"
+                        ? "bg-amber-200 text-amber-950"
+                        : "bg-emerald-100 text-emerald-900"
+                    }`}
+                  >
                     {business.status}
                   </span>
-                  <span className="rounded-full bg-orange-100 px-3 py-1 text-orange-900">
-                    {business.source}
-                  </span>
                 </div>
-                <h3 className="text-xl font-black">{business.name}</h3>
-                <p className="leading-7 text-slate-600">{business.description}</p>
-                <div className="flex flex-wrap gap-3 text-sm text-slate-600">
-                  <span>{business.neighborhood}</span>
-                  <span>{business.hours}</span>
+
+                <div>
+                  <h3 className="text-2xl font-black leading-tight">
+                    {business.name}
+                  </h3>
+                  <p className="mt-3 leading-7 text-slate-600">
+                    {business.description}
+                  </p>
                 </div>
-                <div className="grid grid-cols-2 gap-2">
+
+                <div className="grid gap-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
+                  <div className="flex justify-between gap-4">
+                    <span className="font-bold text-slate-900">Barrio/vereda</span>
+                    <span className="text-right">{business.neighborhood}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-bold text-slate-900">Horario</span>
+                    <span className="text-right">{business.hours}</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span className="font-bold text-slate-900">Domicilios</span>
+                    <span className="text-right">{business.deliveries || "Consultar"}</span>
+                  </div>
+                </div>
+
+                <div className="mt-auto grid grid-cols-2 gap-2">
                   <a
                     href={whatsappUrl(business.whatsapp, business.name)}
                     target="_blank"
@@ -296,6 +329,36 @@ export default function MercauDirectory() {
                   >
                     Llamar
                   </a>
+                  {business.mapsUrl ? (
+                    <a
+                      href={business.mapsUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+                    >
+                      Ubicacion
+                    </a>
+                  ) : null}
+                  {business.instagram ? (
+                    <a
+                      href={socialUrl(business.instagram, "instagram")}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+                    >
+                      Instagram
+                    </a>
+                  ) : null}
+                  {business.facebook ? (
+                    <a
+                      href={socialUrl(business.facebook, "facebook")}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+                    >
+                      Facebook
+                    </a>
+                  ) : null}
                 </div>
               </article>
             ))}

@@ -17,6 +17,10 @@ export type DirectoryBusiness = {
   description: string;
   hours: string;
   whatsapp: string;
+  deliveries?: string;
+  instagram?: string;
+  facebook?: string;
+  mapsUrl?: string;
   status: "Verificado" | "Destacado";
   source: string;
 };

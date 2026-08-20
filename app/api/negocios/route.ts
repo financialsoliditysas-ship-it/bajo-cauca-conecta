@@ -9,6 +9,10 @@ const FIELD_IDS = {
   neighborhood: "fldzy7nwjlebys4w0",
   description: "fldlAXHZlQY2PLtvX",
   hours: "fldGg2RLescrYR2Z6",
+  deliveries: "fldmIVPP97MTqrUfZ",
+  instagram: "fldkT6oBXKONCkak6",
+  facebook: "fldC9M9vXoMFhdqUK",
+  mapsUrl: "fld79aU7BULwF5b65",
   status: "fldyyLYvoyMdiK13C",
   source: "fldOZnz4JnwxkLTYA"
 };
@@ -88,6 +92,10 @@ export async function GET() {
         ),
         hours: text(fields, FIELD_IDS.hours, "Consultar por WhatsApp"),
         whatsapp: text(fields, FIELD_IDS.whatsapp),
+        deliveries: selectName(fields[FIELD_IDS.deliveries]) || "Consultar",
+        instagram: text(fields, FIELD_IDS.instagram),
+        facebook: text(fields, FIELD_IDS.facebook),
+        mapsUrl: text(fields, FIELD_IDS.mapsUrl),
         status,
         source: selectName(fields[FIELD_IDS.source]) || "Airtable"
       };
