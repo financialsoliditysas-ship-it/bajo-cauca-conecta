@@ -139,6 +139,15 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
                 className="rounded-lg border px-4 py-3 font-normal"
               />
             </label>
+            <label className="grid gap-2 font-bold sm:col-span-2">
+              Nueva descripcion publica
+              <textarea
+                name="newDescription"
+                rows={4}
+                placeholder="Escribe aqui como quieres que aparezca la descripcion del negocio."
+                className="rounded-lg border px-4 py-3 font-normal"
+              />
+            </label>
             <label className="grid gap-2 font-bold">
               WhatsApp de confirmacion
               <input
