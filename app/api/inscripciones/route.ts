@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomBytes } from "crypto";
 
 const FIELD_IDS = {
   businessName: "fldZAuId3Z7tmNg1y",
@@ -15,7 +16,9 @@ const FIELD_IDS = {
   facebook: "fldC9M9vXoMFhdqUK",
   status: "fldyyLYvoyMdiK13C",
   source: "fldOZnz4JnwxkLTYA",
-  notes: "fldrZ1LUWRcvKklVQ"
+  notes: "fldrZ1LUWRcvKklVQ",
+  updateToken: "fldSXi5dNYP1WaWKq",
+  updateLink: "fldINHrjgKw2AATkZ"
 };
 
 const allowedCategories = new Set([
@@ -42,6 +45,16 @@ function cleanSocial(value: unknown) {
   return cleanText(value, 180).replace(/\s+/g, " ");
 }
 
+function appUrl(request: NextRequest) {
+  const configuredUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (configuredUrl) return configuredUrl.replace(/\/$/, "");
+
+  const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+  const proto = request.headers.get("x-forwarded-proto") || "https";
+
+  return host ? `${proto}://${host}` : "https://bajo-cauca-conecta.vercel.app";
+}
+
 export async function POST(request: NextRequest) {
   const token = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
@@ -59,6 +72,8 @@ export async function POST(request: NextRequest) {
   const ownerName = cleanText(body.ownerName, 100);
   const whatsapp = normalizePhone(body.whatsapp);
   const category = allowedCategories.has(body.category) ? body.category : "";
+  const updateToken = randomBytes(18).toString("base64url");
+  const updateLink = `${appUrl(request)}/actualizar/${updateToken}`;
 
   if (!businessName || !ownerName || !whatsapp || !category) {
     return NextResponse.json(
@@ -83,7 +98,9 @@ export async function POST(request: NextRequest) {
     [FIELD_IDS.facebook]: cleanSocial(body.facebook),
     [FIELD_IDS.status]: "Pendiente",
     [FIELD_IDS.source]: "Formulario",
-    [FIELD_IDS.notes]: "Inscripcion recibida desde el MVP publico de Mercau."
+    [FIELD_IDS.notes]: "Inscripcion recibida desde el MVP publico de Mercau.",
+    [FIELD_IDS.updateToken]: updateToken,
+    [FIELD_IDS.updateLink]: updateLink
   };
 
   Object.keys(fields).forEach((key) => {
