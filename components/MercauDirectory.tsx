@@ -333,12 +333,22 @@ export default function MercauDirectory() {
               </select>
             </label>
             <label className="grid gap-2 font-bold">
-              Instagram
-              <input name="instagram" type="url" className="rounded-lg border px-4 py-3 font-normal" />
+              Instagram o usuario
+              <input
+                name="instagram"
+                type="text"
+                placeholder="@minegocio o instagram.com/minegocio"
+                className="rounded-lg border px-4 py-3 font-normal"
+              />
             </label>
             <label className="grid gap-2 font-bold">
-              Facebook
-              <input name="facebook" type="url" className="rounded-lg border px-4 py-3 font-normal" />
+              Facebook o nombre de la pagina
+              <input
+                name="facebook"
+                type="text"
+                placeholder="Mi Negocio Nechi o facebook.com/minegocio"
+                className="rounded-lg border px-4 py-3 font-normal"
+              />
             </label>
             <button
               type="submit"

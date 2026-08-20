@@ -38,6 +38,10 @@ function normalizePhone(value: unknown) {
   return cleanText(value, 32).replace(/[^\d+]/g, "");
 }
 
+function cleanSocial(value: unknown) {
+  return cleanText(value, 180).replace(/\s+/g, " ");
+}
+
 export async function POST(request: NextRequest) {
   const token = process.env.AIRTABLE_API_KEY;
   const baseId = process.env.AIRTABLE_BASE_ID;
@@ -75,8 +79,8 @@ export async function POST(request: NextRequest) {
     [FIELD_IDS.deliveries]:
       body.deliveries === "Si" ? "Si" : body.deliveries === "No" ? "No" : "Consultar",
     [FIELD_IDS.wantsMarketplace]: body.wantsMarketplace === "Si" ? "Si" : "Despues",
-    [FIELD_IDS.instagram]: cleanText(body.instagram, 180),
-    [FIELD_IDS.facebook]: cleanText(body.facebook, 180),
+    [FIELD_IDS.instagram]: cleanSocial(body.instagram),
+    [FIELD_IDS.facebook]: cleanSocial(body.facebook),
     [FIELD_IDS.status]: "Pendiente",
     [FIELD_IDS.source]: "Formulario",
     [FIELD_IDS.notes]: "Inscripcion recibida desde el MVP publico de Mercau."
