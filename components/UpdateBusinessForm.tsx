@@ -68,11 +68,11 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
 
       form.reset();
       setSubmitStatus(
-        "Solicitud recibida. Mercaú revisara el cambio antes de publicarlo."
+        "Solicitud recibida. Mercáu revisara el cambio antes de publicarlo."
       );
     } catch (error) {
       setSubmitStatus(
-        "No se pudo enviar la solicitud. Intenta nuevamente o escribe por WhatsApp a Mercaú."
+        "No se pudo enviar la solicitud. Intenta nuevamente o escribe por WhatsApp a Mercáu."
       );
     } finally {
       setIsSubmitting(false);
@@ -87,7 +87,7 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
             Link privado del negocio
           </p>
           <h1 className="mt-3 text-4xl font-black leading-tight md:text-6xl">
-            Actualizar ficha en Mercaú
+            Actualizar ficha en Mercáu
           </h1>
           <p className="mt-4 max-w-3xl leading-8 text-emerald-50/85">
             Este enlace es privado para administrar la información de tu negocio.

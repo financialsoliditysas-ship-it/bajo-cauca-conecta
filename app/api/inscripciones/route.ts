@@ -98,7 +98,7 @@ export async function POST(request: NextRequest) {
     [FIELD_IDS.facebook]: cleanSocial(body.facebook),
     [FIELD_IDS.status]: "Pendiente",
     [FIELD_IDS.source]: "Formulario",
-    [FIELD_IDS.notes]: "Inscripcion recibida desde el MVP publico de Mercau.",
+    [FIELD_IDS.notes]: "Inscripcion recibida desde el MVP publico de Mercáu.",
     [FIELD_IDS.updateToken]: updateToken,
     [FIELD_IDS.updateLink]: updateLink
   };

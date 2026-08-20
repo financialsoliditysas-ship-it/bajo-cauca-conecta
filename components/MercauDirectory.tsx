@@ -30,7 +30,7 @@ function normalize(value: string) {
 function whatsappUrl(phone: string, businessName: string) {
   const cleaned = phone.replace(/[^\d]/g, "");
   const text = encodeURIComponent(
-    `Hola, vi ${businessName} en Mercaú y quiero mas informacion.`
+    `Hola, vi ${businessName} en Mercáu y quiero mas informacion.`
   );
 
   return `https://wa.me/${cleaned}?text=${text}`;
@@ -169,8 +169,13 @@ export default function MercauDirectory() {
             <p className="text-sm font-extrabold uppercase tracking-normal text-amber-300">
               Piloto Nechi
             </p>
-            <h1 className="mt-3 text-6xl font-black leading-none sm:text-7xl md:text-8xl">
-              Mercaú
+            <img
+              src="/logo-mercau.png"
+              alt="Mercáu"
+              className="mt-5 h-28 w-28 rounded-2xl object-cover shadow-soft sm:h-36 sm:w-36"
+            />
+            <h1 className="mt-5 text-6xl font-black leading-none sm:text-7xl md:text-8xl">
+              Mercáu
             </h1>
             <p className="mt-5 text-3xl font-black leading-tight sm:text-4xl">
               El directorio digital de Nechi
@@ -413,7 +418,7 @@ export default function MercauDirectory() {
             <p className="mt-5 max-w-xl leading-8 text-slate-600">
               Tu solicitud queda como pendiente para revision. Cuando sea
               validada, el negocio puede mostrarse en el directorio y luego
-              pasar a vender en Mercaú.
+              pasar a vender en Mercáu.
             </p>
           </div>
 
@@ -463,7 +468,7 @@ export default function MercauDirectory() {
               </select>
             </label>
             <label className="grid gap-2 font-bold">
-              Quiere vender en Mercaú
+              Quiere vender en Mercáu
               <select name="wantsMarketplace" className="rounded-lg border px-4 py-3 font-normal">
                 <option>Despues</option>
                 <option>Si</option>
