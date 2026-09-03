@@ -9,7 +9,7 @@ import {
 } from "@/data/directory";
 
 const categoryInitials: Record<DirectoryCategory, string> = {
-  Comida: "Co",
+  "Comidas y Bebidas": "CB",
   Hogar: "Ho",
   Salud: "Sa",
   Belleza: "Be",
@@ -166,13 +166,10 @@ export default function MercauDirectory() {
       <section className="bg-emerald-950 text-white">
         <div className="container grid min-h-[calc(100vh-68px)] gap-10 py-16 md:grid-cols-[1.15fr_0.85fr] md:items-end md:py-24">
           <div>
-            <p className="text-sm font-extrabold uppercase tracking-normal text-amber-300">
-              Piloto Nechí
-            </p>
             <img
               src="/logo-mercau.png"
               alt="Mercáu"
-              className="mt-5 h-28 w-28 rounded-2xl object-cover shadow-soft sm:h-36 sm:w-36"
+              className="h-28 w-28 rounded-2xl object-cover shadow-soft sm:h-36 sm:w-36"
             />
             <h1 className="mt-5 text-6xl font-black leading-none sm:text-7xl md:text-8xl">
               Mercáu
@@ -278,7 +275,7 @@ export default function MercauDirectory() {
                 onChange={(event) => setQuery(event.target.value)}
                 className="rounded-lg border border-slate-200 px-4 py-3 font-normal"
                 type="search"
-                placeholder="Comida, ferreteria, domicilio..."
+                placeholder="Comidas, bebidas, ferreteria, domicilio..."
               />
             </label>
             <button

@@ -1,5 +1,5 @@
 export type DirectoryCategory =
-  | "Comida"
+  | "Comidas y Bebidas"
   | "Hogar"
   | "Salud"
   | "Belleza"
@@ -29,7 +29,7 @@ export const directoryCategories: Array<{
   name: DirectoryCategory;
   hint: string;
 }> = [
-  { name: "Comida", hint: "Restaurantes, comidas rapidas y pedidos" },
+  { name: "Comidas y Bebidas", hint: "Restaurantes, comidas rapidas y bebidas" },
   { name: "Hogar", hint: "Tiendas, variedades y productos de casa" },
   { name: "Salud", hint: "Droguerias, bienestar y atencion local" },
   { name: "Belleza", hint: "Barberias, peluquerias y estetica" },
@@ -44,7 +44,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
   {
     id: "demo-cocina-local",
     name: "Demo Cocina Local",
-    category: "Comida",
+    category: "Comidas y Bebidas",
     neighborhood: "Centro",
     description: "Registro demo para mostrar restaurantes y comidas del directorio.",
     hours: "Consultar por WhatsApp",

@@ -59,6 +59,10 @@ function linkedRecordId(value: unknown) {
   return "";
 }
 
+function publicCategory(value: string) {
+  return value === "Comida" ? "Comidas y Bebidas" : value;
+}
+
 async function loadAppliedUpdates(config: {
   token: string;
   baseId: string;
@@ -153,7 +157,7 @@ export async function GET() {
       const fields = record.fields || {};
       const appliedUpdate = appliedUpdates.get(record.id) || {};
       const status = selectName(fields[FIELD_IDS.status]);
-      const category = selectName(fields[FIELD_IDS.category]);
+      const category = publicCategory(selectName(fields[FIELD_IDS.category]));
 
       if (!approvedStatuses.has(status)) return null;
 
