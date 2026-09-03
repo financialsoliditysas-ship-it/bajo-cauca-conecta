@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description:
     "Mercáu es el directorio digital de Nechí para encontrar negocios locales, contactar por WhatsApp e inscribir comercios.",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://bajo-cauca-conecta.vercel.app"
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://mercau-co.vercel.app"
   )
 };
 

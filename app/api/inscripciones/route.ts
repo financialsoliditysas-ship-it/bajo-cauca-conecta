@@ -52,7 +52,7 @@ function appUrl(request: NextRequest) {
   const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
   const proto = request.headers.get("x-forwarded-proto") || "https";
 
-  return host ? `${proto}://${host}` : "https://bajo-cauca-conecta.vercel.app";
+  return host ? `${proto}://${host}` : "https://mercau-co.vercel.app";
 }
 
 export async function POST(request: NextRequest) {
