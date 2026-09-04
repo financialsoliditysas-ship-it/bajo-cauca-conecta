@@ -62,7 +62,13 @@ function trackMetric(payload: Record<string, string>) {
   }).catch(() => {});
 }
 
-function BusinessCard({ business }: { business: DirectoryBusiness }) {
+function BusinessCard({
+  business,
+  onOpen
+}: {
+  business: DirectoryBusiness;
+  onOpen: (business: DirectoryBusiness) => void;
+}) {
   const visiblePhone = business.whatsapp.replace(/[^\d+]/g, "");
 
   return (
@@ -131,6 +137,13 @@ function BusinessCard({ business }: { business: DirectoryBusiness }) {
           Contactar por WhatsApp
         </a>
         <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => onOpen(business)}
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-950 px-4 font-extrabold text-white"
+          >
+            Ver ficha
+          </button>
           <a
             href={`tel:${business.whatsapp}`}
             className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
@@ -173,12 +186,100 @@ function BusinessCard({ business }: { business: DirectoryBusiness }) {
   );
 }
 
+function BusinessDetailModal({
+  business,
+  onClose
+}: {
+  business: DirectoryBusiness;
+  onClose: () => void;
+}) {
+  const visiblePhone = business.whatsapp.replace(/[^\d+]/g, "");
+
+  return (
+    <div className="fixed inset-0 z-[80] grid place-items-end bg-emerald-950/70 p-0 sm:place-items-center sm:p-6">
+      <div className="max-h-[92vh] w-full overflow-y-auto rounded-t-lg bg-white p-5 shadow-soft sm:max-w-2xl sm:rounded-lg sm:p-6">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="flex flex-wrap gap-2 text-xs font-extrabold">
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
+                {categoryLabel(business.category)}
+              </span>
+              <span className="rounded-full bg-amber-200 px-3 py-1 text-amber-950">
+                {business.status}
+              </span>
+            </div>
+            <h2 className="mt-4 text-3xl font-black leading-tight text-emerald-950">
+              {business.name}
+            </h2>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 font-black text-slate-700"
+            aria-label="Cerrar ficha"
+          >
+            X
+          </button>
+        </div>
+
+        <p className="mt-5 leading-8 text-slate-700">{business.description}</p>
+
+        <div className="mt-6 grid gap-3 rounded-lg bg-slate-50 p-4 text-sm text-slate-700 sm:grid-cols-2">
+          <p><strong className="text-slate-950">Barrio/vereda:</strong> {business.neighborhood}</p>
+          <p><strong className="text-slate-950">Horario:</strong> {business.hours}</p>
+          <p><strong className="text-slate-950">Domicilios:</strong> {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}</p>
+          <p><strong className="text-slate-950">WhatsApp:</strong> {visiblePhone || "Consultar"}</p>
+          <p><strong className="text-slate-950">Instagram:</strong> {business.instagram || "No registrado"}</p>
+          <p><strong className="text-slate-950">Facebook:</strong> {business.facebook || "No registrado"}</p>
+        </div>
+
+        <div className="mt-6 grid gap-2 sm:grid-cols-2">
+          <a
+            href={whatsappUrl(business.whatsapp, business.name)}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() =>
+              trackMetric({
+                type: "Clic WhatsApp",
+                businessId: business.id,
+                businessName: business.name,
+                category: business.category
+              })
+            }
+            className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-300 px-4 text-center font-extrabold text-emerald-950"
+          >
+            Contactar por WhatsApp
+          </a>
+          <a
+            href={`tel:${business.whatsapp}`}
+            className="inline-flex min-h-12 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
+          >
+            Llamar
+          </a>
+          {business.mapsUrl ? (
+            <a
+              href={business.mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-12 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+            >
+              Abrir ubicación
+            </a>
+          ) : null}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function MercauDirectory() {
   const [activeCategory, setActiveCategory] = useState<DirectoryCategory | "">("");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDirectoryLoading, setIsDirectoryLoading] = useState(true);
+  const [selectedBusiness, setSelectedBusiness] =
+    useState<DirectoryBusiness | null>(null);
   const [businesses, setBusinesses] = useState<DirectoryBusiness[]>([]);
   const [directoryStatus, setDirectoryStatus] = useState(
     "Cargando negocios aprobados..."
@@ -460,7 +561,11 @@ export default function MercauDirectory() {
               </div>
               <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredBusinesses.map((business) => (
-                  <BusinessCard key={`featured-${business.id}`} business={business} />
+                  <BusinessCard
+                    key={`featured-${business.id}`}
+                    business={business}
+                    onOpen={setSelectedBusiness}
+                  />
                 ))}
               </div>
             </section>
@@ -484,7 +589,11 @@ export default function MercauDirectory() {
               </div>
               <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {regularBusinesses.map((business) => (
-                  <BusinessCard key={business.id} business={business} />
+                  <BusinessCard
+                    key={business.id}
+                    business={business}
+                    onOpen={setSelectedBusiness}
+                  />
                 ))}
               </div>
             </section>
@@ -598,6 +707,12 @@ export default function MercauDirectory() {
           </form>
         </div>
       </section>
+      {selectedBusiness ? (
+        <BusinessDetailModal
+          business={selectedBusiness}
+          onClose={() => setSelectedBusiness(null)}
+        />
+      ) : null}
     </>
   );
 }
