@@ -63,8 +63,10 @@ function trackMetric(payload: Record<string, string>) {
 }
 
 function BusinessCard({ business }: { business: DirectoryBusiness }) {
+  const visiblePhone = business.whatsapp.replace(/[^\d+]/g, "");
+
   return (
-    <article className="flex min-h-full flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft">
+    <article className="flex min-h-full flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-emerald-300">
       <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
         <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
           {categoryLabel(business.category)}
@@ -105,9 +107,13 @@ function BusinessCard({ business }: { business: DirectoryBusiness }) {
             {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}
           </span>
         </div>
+        <div className="flex justify-between gap-4">
+          <span className="font-bold text-slate-900">Contacto</span>
+          <span className="text-right">{visiblePhone || "Consultar"}</span>
+        </div>
       </div>
 
-      <div className="mt-auto grid grid-cols-2 gap-2">
+      <div className="mt-auto grid gap-2">
         <a
           href={whatsappUrl(business.whatsapp, business.name)}
           target="_blank"
@@ -120,46 +126,48 @@ function BusinessCard({ business }: { business: DirectoryBusiness }) {
               category: business.category
             })
           }
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-300 px-4 font-extrabold text-emerald-950"
+          className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-300 px-4 text-center font-extrabold text-emerald-950"
         >
-          WhatsApp
+          Contactar por WhatsApp
         </a>
-        <a
-          href={`tel:${business.whatsapp}`}
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
-        >
-          Llamar
-        </a>
-        {business.mapsUrl ? (
+        <div className="grid grid-cols-2 gap-2">
           <a
-            href={business.mapsUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+            href={`tel:${business.whatsapp}`}
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
           >
-            Ubicación
+            Llamar
           </a>
-        ) : null}
-        {business.instagram ? (
-          <a
-            href={socialUrl(business.instagram, "instagram")}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
-          >
-            Instagram
-          </a>
-        ) : null}
-        {business.facebook ? (
-          <a
-            href={socialUrl(business.facebook, "facebook")}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
-          >
-            Facebook
-          </a>
-        ) : null}
+          {business.mapsUrl ? (
+            <a
+              href={business.mapsUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+            >
+              Ubicación
+            </a>
+          ) : null}
+          {business.instagram ? (
+            <a
+              href={socialUrl(business.instagram, "instagram")}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+            >
+              Instagram
+            </a>
+          ) : null}
+          {business.facebook ? (
+            <a
+              href={socialUrl(business.facebook, "facebook")}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+            >
+              Facebook
+            </a>
+          ) : null}
+        </div>
       </div>
     </article>
   );
