@@ -38,7 +38,7 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
         setPageStatus("");
       } catch (error) {
         setPageStatus(
-          "Este enlace privado no existe, fue cambiado o no esta disponible."
+          "Este enlace privado no existe, fue cambiado o no está disponible."
         );
       }
     }
@@ -85,7 +85,7 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
 
       form.reset();
       setSubmitStatus(
-        "Solicitud recibida. Mercáu revisara el cambio antes de publicarlo."
+        "Solicitud recibida. Mercáu revisará el cambio antes de publicarlo."
       );
     } catch (error) {
       setSubmitStatus(
@@ -126,8 +126,8 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
                   {business.name}
                 </h2>
                 <div className="mt-5 grid gap-3 text-sm text-slate-700">
-                  <p><strong>Categoria:</strong> {business.category || "Por confirmar"}</p>
-                  <p><strong>Direccion:</strong> {business.neighborhood || "Por confirmar"}</p>
+                  <p><strong>Categoría:</strong> {business.category || "Por confirmar"}</p>
+                  <p><strong>Dirección:</strong> {business.neighborhood || "Por confirmar"}</p>
                   <p><strong>WhatsApp:</strong> {business.whatsapp || "Por confirmar"}</p>
                   <p><strong>Horario:</strong> {business.hours || "Por confirmar"}</p>
                   <p><strong>Domicilios:</strong> {business.deliveries || "Consultar"}</p>
@@ -156,11 +156,11 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
               />
             </label>
             <label className="grid gap-2 font-bold sm:col-span-2">
-              Nueva descripcion publica
+              Nueva descripción pública
               <textarea
                 name="newDescription"
                 rows={4}
-                placeholder="Escribe aqui como quieres que aparezca la descripcion del negocio."
+                placeholder="Escribe aquí cómo quieres que aparezca la descripción del negocio."
                 className="rounded-lg border px-4 py-3 font-normal"
               />
             </label>
@@ -181,7 +181,7 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
               />
             </label>
             <label className="grid gap-2 font-bold">
-              Nueva direccion
+              Nueva dirección
               <input name="newNeighborhood" className="rounded-lg border px-4 py-3 font-normal" />
             </label>
             <label className="grid gap-2 font-bold">
@@ -217,7 +217,7 @@ export default function UpdateBusinessForm({ token }: { token: string }) {
               Google Maps
               <input
                 name="mapsUrl"
-                placeholder="Link de ubicacion si lo tienes"
+                placeholder="Link de ubicación si lo tienes"
                 className="rounded-lg border px-4 py-3 font-normal"
               />
             </label>

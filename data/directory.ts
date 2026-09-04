@@ -29,14 +29,14 @@ export const directoryCategories: Array<{
   name: DirectoryCategory;
   hint: string;
 }> = [
-  { name: "Comidas y Bebidas", hint: "Restaurantes, comidas rapidas y bebidas" },
+  { name: "Comidas y Bebidas", hint: "Restaurantes, comidas rápidas y bebidas" },
   { name: "Hogar", hint: "Tiendas, variedades y productos de casa" },
-  { name: "Salud", hint: "Droguerias, bienestar y atencion local" },
-  { name: "Belleza", hint: "Barberias, peluquerias y estetica" },
+  { name: "Salud", hint: "Droguerías, bienestar y atención local" },
+  { name: "Belleza", hint: "Barberías, peluquerías y estética" },
   { name: "Moda", hint: "Ropa, calzado y accesorios" },
   { name: "Ferreteria", hint: "Materiales, herramientas y repuestos" },
-  { name: "Servicios", hint: "Oficios, tecnicos y soluciones" },
-  { name: "Transporte", hint: "Mensajeria, domicilios y movilidad" },
+  { name: "Servicios", hint: "Oficios, técnicos y soluciones" },
+  { name: "Transporte", hint: "Mensajería, domicilios y movilidad" },
   { name: "Emprendimientos", hint: "Marcas locales y ventas por redes" }
 ];
 
@@ -54,10 +54,10 @@ export const directoryBusinesses: DirectoryBusiness[] = [
   },
   {
     id: "demo-ferreteria-nechi",
-    name: "Demo Ferreteria Nechi",
+    name: "Demo Ferretería Nechí",
     category: "Ferreteria",
     neighborhood: "Zona comercial",
-    description: "Registro demo para mostrar busqueda de ferreterias y materiales.",
+    description: "Registro demo para mostrar búsqueda de ferreterías y materiales.",
     hours: "Consultar por WhatsApp",
     whatsapp: "+573000000002",
     status: "Verificado",
@@ -68,7 +68,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     name: "Demo Belleza y Estilo",
     category: "Belleza",
     neighborhood: "Barrio por confirmar",
-    description: "Registro demo para mostrar servicios de peluqueria, barberia y estetica.",
+    description: "Registro demo para mostrar servicios de peluquería, barbería y estética.",
     hours: "Consultar por WhatsApp",
     whatsapp: "+573000000003",
     status: "Verificado",
@@ -76,7 +76,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
   },
   {
     id: "demo-salud-drogueria",
-    name: "Demo Salud y Drogueria",
+    name: "Demo Salud y Droguería",
     category: "Salud",
     neighborhood: "Centro",
     description: "Registro demo para mostrar farmacias, salud y bienestar.",
@@ -98,7 +98,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
   },
   {
     id: "demo-servicios-tecnicos",
-    name: "Demo Servicios Tecnicos",
+    name: "Demo Servicios Técnicos",
     category: "Servicios",
     neighborhood: "A domicilio",
     description: "Registro demo para mostrar reparaciones, oficios y servicios locales.",
@@ -112,7 +112,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     name: "Demo Hogar y Variedades",
     category: "Hogar",
     neighborhood: "Centro",
-    description: "Registro demo para mostrar tiendas de hogar, miscelaneas y variedades.",
+    description: "Registro demo para mostrar tiendas de hogar, misceláneas y variedades.",
     hours: "Consultar por WhatsApp",
     whatsapp: "+573000000007",
     status: "Verificado",
@@ -120,7 +120,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
   },
   {
     id: "demo-emprendimiento-nechi",
-    name: "Demo Emprendimiento Nechi",
+    name: "Demo Emprendimiento Nechí",
     category: "Emprendimientos",
     neighborhood: "Redes sociales",
     description: "Registro demo para mostrar emprendimientos que venden por WhatsApp y redes.",

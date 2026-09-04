@@ -30,7 +30,7 @@ function normalize(value: string) {
 function whatsappUrl(phone: string, businessName: string) {
   const cleaned = phone.replace(/[^\d]/g, "");
   const text = encodeURIComponent(
-    `Hola, vi ${businessName} en Mercáu y quiero mas informacion.`
+    `Hola, vi ${businessName} en Mercáu y quiero más información.`
   );
 
   return `https://wa.me/${cleaned}?text=${text}`;
@@ -63,8 +63,7 @@ export default function MercauDirectory() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [businesses, setBusinesses] =
-    useState<DirectoryBusiness[]>(directoryBusinesses);
+  const [businesses, setBusinesses] = useState<DirectoryBusiness[]>([]);
   const [directoryStatus, setDirectoryStatus] = useState(
     "Cargando negocios aprobados..."
   );
@@ -88,12 +87,18 @@ export default function MercauDirectory() {
 
       setBusinesses([]);
       setDirectoryStatus(
-        "Todavia no hay negocios aprobados para mostrar."
+        "Todavía no hay negocios aprobados para mostrar."
       );
     } catch (error) {
-      setBusinesses(directoryBusinesses);
+      setBusinesses(
+        process.env.NEXT_PUBLIC_ALLOW_DEMO_DATA === "true"
+          ? directoryBusinesses
+          : []
+      );
       setDirectoryStatus(
-        "No se pudo cargar Airtable. Mostrando datos demo temporalmente."
+        process.env.NEXT_PUBLIC_ALLOW_DEMO_DATA === "true"
+          ? "No se pudo cargar Airtable. Mostrando datos demo temporalmente."
+          : "No se pudo cargar el directorio en este momento. Intenta nuevamente en unos minutos."
       );
     }
   }
@@ -142,7 +147,7 @@ export default function MercauDirectory() {
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setIsSubmitting(true);
-    setStatus("Enviando inscripcion...");
+    setStatus("Enviando inscripción...");
 
     const form = event.currentTarget;
     const payload = Object.fromEntries(new FormData(form).entries());
@@ -160,7 +165,7 @@ export default function MercauDirectory() {
       }
 
       form.reset();
-      setStatus("Inscripcion recibida. Queda pendiente de revision.");
+      setStatus("Inscripción recibida. Queda pendiente de revisión.");
       trackMetric({
         type: "Inscripcion enviada",
         businessName: String(payload.businessName || ""),
@@ -193,7 +198,7 @@ export default function MercauDirectory() {
               El directorio digital de Nechí
             </p>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-emerald-50/85">
-              Encuentra negocios locales por categoria, contacta por WhatsApp y
+              Encuentra negocios locales por categoría, contacta por WhatsApp y
               ayuda a construir la vitrina comercial del municipio.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -214,7 +219,7 @@ export default function MercauDirectory() {
 
           <div className="grid gap-3">
             {[
-              ["9", "Categorias"],
+              ["9", "Categorías"],
               ["2 min", "Registro"],
               ["WhatsApp", "Contacto directo"]
             ].map(([value, label]) => (
@@ -233,7 +238,7 @@ export default function MercauDirectory() {
       <section className="bg-[#fbfaf6] py-16 md:py-20">
         <div className="container">
           <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-            Buscar por categoria
+            Buscar por categoría
           </p>
           <h2 className="mt-2 max-w-3xl text-3xl font-black leading-tight md:text-5xl">
             Lo que la gente necesita, organizado
@@ -290,7 +295,7 @@ export default function MercauDirectory() {
                 onChange={(event) => setQuery(event.target.value)}
                 className="rounded-lg border border-slate-200 px-4 py-3 font-normal"
                 type="search"
-                placeholder="Comidas, bebidas, ferreteria, domicilio..."
+                placeholder="Comidas, bebidas, ferretería, domicilio..."
               />
             </label>
             <button
@@ -327,6 +332,11 @@ export default function MercauDirectory() {
                   >
                     {business.status}
                   </span>
+                  {business.source.toLowerCase().includes("demo") ? (
+                    <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
+                      Demo
+                    </span>
+                  ) : null}
                 </div>
 
                 <div>
@@ -383,7 +393,7 @@ export default function MercauDirectory() {
                       rel="noreferrer"
                       className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
                     >
-                      Ubicacion
+                      Ubicación
                     </a>
                   ) : null}
                   {business.instagram ? (
@@ -422,13 +432,13 @@ export default function MercauDirectory() {
         <div className="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
             <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-              Inscripcion gratuita
+              Inscripción gratuita
             </p>
             <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
               Agrega tu negocio al Directorio Digital de Nechí
             </h2>
             <p className="mt-5 max-w-xl leading-8 text-slate-600">
-              Tu solicitud queda como pendiente para revision. Cuando sea
+              Tu solicitud queda como pendiente para revisión. Cuando sea
               validada, el negocio puede mostrarse en el directorio y luego
               pasar a vender en Mercáu.
             </p>
@@ -451,9 +461,9 @@ export default function MercauDirectory() {
               <input name="whatsapp" required inputMode="tel" className="rounded-lg border px-4 py-3 font-normal" />
             </label>
             <label className="grid gap-2 font-bold">
-              Categoria
+              Categoría
               <select name="category" required className="rounded-lg border px-4 py-3 font-normal">
-                <option value="">Seleccionar categoria</option>
+                <option value="">Seleccionar categoría</option>
                 {directoryCategories.map((category) => (
                   <option key={category.name}>{category.name}</option>
                 ))}
@@ -468,7 +478,7 @@ export default function MercauDirectory() {
               <input name="hours" className="rounded-lg border px-4 py-3 font-normal" />
             </label>
             <label className="grid gap-2 font-bold sm:col-span-2">
-              Descripcion corta
+              Descripción corta
               <textarea name="description" required rows={4} className="rounded-lg border px-4 py-3 font-normal" />
             </label>
             <label className="grid gap-2 font-bold">
@@ -482,7 +492,7 @@ export default function MercauDirectory() {
             <label className="grid gap-2 font-bold">
               Quiere vender en Mercáu
               <select name="wantsMarketplace" className="rounded-lg border px-4 py-3 font-normal">
-                <option>Despues</option>
+                <option>Después</option>
                 <option>Si</option>
               </select>
             </label>
@@ -496,7 +506,7 @@ export default function MercauDirectory() {
               />
             </label>
             <label className="grid gap-2 font-bold">
-              Facebook o nombre de la pagina
+              Facebook o nombre de la página
               <input
                 name="facebook"
                 type="text"
@@ -509,7 +519,7 @@ export default function MercauDirectory() {
               disabled={isSubmitting}
               className="inline-flex min-h-12 items-center justify-center rounded-lg bg-emerald-700 px-5 font-extrabold text-white disabled:opacity-60 sm:col-span-2"
             >
-              {isSubmitting ? "Enviando..." : "Enviar inscripcion"}
+              {isSubmitting ? "Enviando..." : "Enviar inscripción"}
             </button>
             {status ? (
               <p className="font-bold text-emerald-900 sm:col-span-2">{status}</p>
