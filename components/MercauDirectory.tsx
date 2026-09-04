@@ -62,6 +62,109 @@ function trackMetric(payload: Record<string, string>) {
   }).catch(() => {});
 }
 
+function BusinessCard({ business }: { business: DirectoryBusiness }) {
+  return (
+    <article className="flex min-h-full flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft">
+      <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
+        <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
+          {categoryLabel(business.category)}
+        </span>
+        <span
+          className={`rounded-full px-3 py-1 ${
+            business.status === "Destacado"
+              ? "bg-amber-200 text-amber-950"
+              : "bg-emerald-100 text-emerald-900"
+          }`}
+        >
+          {business.status}
+        </span>
+        {business.source.toLowerCase().includes("demo") ? (
+          <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
+            Demo
+          </span>
+        ) : null}
+      </div>
+
+      <div>
+        <h3 className="text-2xl font-black leading-tight">{business.name}</h3>
+        <p className="mt-3 leading-7 text-slate-600">{business.description}</p>
+      </div>
+
+      <div className="grid gap-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
+        <div className="flex justify-between gap-4">
+          <span className="font-bold text-slate-900">Barrio/vereda</span>
+          <span className="text-right">{business.neighborhood}</span>
+        </div>
+        <div className="flex justify-between gap-4">
+          <span className="font-bold text-slate-900">Horario</span>
+          <span className="text-right">{business.hours}</span>
+        </div>
+        <div className="flex justify-between gap-4">
+          <span className="font-bold text-slate-900">Domicilios</span>
+          <span className="text-right">
+            {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}
+          </span>
+        </div>
+      </div>
+
+      <div className="mt-auto grid grid-cols-2 gap-2">
+        <a
+          href={whatsappUrl(business.whatsapp, business.name)}
+          target="_blank"
+          rel="noreferrer"
+          onClick={() =>
+            trackMetric({
+              type: "Clic WhatsApp",
+              businessId: business.id,
+              businessName: business.name,
+              category: business.category
+            })
+          }
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-300 px-4 font-extrabold text-emerald-950"
+        >
+          WhatsApp
+        </a>
+        <a
+          href={`tel:${business.whatsapp}`}
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
+        >
+          Llamar
+        </a>
+        {business.mapsUrl ? (
+          <a
+            href={business.mapsUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+          >
+            Ubicación
+          </a>
+        ) : null}
+        {business.instagram ? (
+          <a
+            href={socialUrl(business.instagram, "instagram")}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+          >
+            Instagram
+          </a>
+        ) : null}
+        {business.facebook ? (
+          <a
+            href={socialUrl(business.facebook, "facebook")}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+          >
+            Facebook
+          </a>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
 export default function MercauDirectory() {
   const [activeCategory, setActiveCategory] = useState<DirectoryCategory | "">("");
   const [query, setQuery] = useState("");
@@ -152,6 +255,16 @@ export default function MercauDirectory() {
       return categoryMatches && (!term || searchable.includes(term));
     });
   }, [activeCategory, businesses, query]);
+
+  const featuredBusinesses = useMemo(
+    () => filteredBusinesses.filter((business) => business.status === "Destacado"),
+    [filteredBusinesses]
+  );
+
+  const regularBusinesses = useMemo(
+    () => filteredBusinesses.filter((business) => business.status !== "Destacado"),
+    [filteredBusinesses]
+  );
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -322,113 +435,51 @@ export default function MercauDirectory() {
             {directoryStatus}
           </p>
 
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredBusinesses.map((business) => (
-              <article
-                key={business.id}
-                className="flex min-h-full flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft"
-              >
-                <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
-                  <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
-                    {categoryLabel(business.category)}
-                  </span>
-                  <span
-                    className={`rounded-full px-3 py-1 ${
-                      business.status === "Destacado"
-                        ? "bg-amber-200 text-amber-950"
-                        : "bg-emerald-100 text-emerald-900"
-                    }`}
-                  >
-                    {business.status}
-                  </span>
-                  {business.source.toLowerCase().includes("demo") ? (
-                    <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
-                      Demo
-                    </span>
-                  ) : null}
-                </div>
-
+          {featuredBusinesses.length > 0 ? (
+            <section className="mt-8">
+              <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
-                  <h3 className="text-2xl font-black leading-tight">
-                    {business.name}
-                  </h3>
-                  <p className="mt-3 leading-7 text-slate-600">
-                    {business.description}
+                  <p className="text-sm font-extrabold uppercase tracking-normal text-amber-700">
+                    Destacados
                   </p>
+                  <h3 className="mt-1 text-2xl font-black text-emerald-950">
+                    Negocios recomendados
+                  </h3>
                 </div>
+                <span className="rounded-full bg-amber-200 px-3 py-1 text-sm font-black text-amber-950">
+                  {featuredBusinesses.length} visibles
+                </span>
+              </div>
+              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {featuredBusinesses.map((business) => (
+                  <BusinessCard key={`featured-${business.id}`} business={business} />
+                ))}
+              </div>
+            </section>
+          ) : null}
 
-                <div className="grid gap-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
-                  <div className="flex justify-between gap-4">
-                    <span className="font-bold text-slate-900">Barrio/vereda</span>
-                    <span className="text-right">{business.neighborhood}</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-bold text-slate-900">Horario</span>
-                    <span className="text-right">{business.hours}</span>
-                  </div>
-                  <div className="flex justify-between gap-4">
-                    <span className="font-bold text-slate-900">Domicilios</span>
-                    <span className="text-right">{business.deliveries || "Consultar"}</span>
-                  </div>
+          {regularBusinesses.length > 0 || featuredBusinesses.length === 0 ? (
+            <section className={featuredBusinesses.length > 0 ? "mt-12" : "mt-8"}>
+              <div className="flex flex-wrap items-end justify-between gap-3">
+                <div>
+                  <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
+                    Directorio
+                  </p>
+                  <h3 className="mt-1 text-2xl font-black text-emerald-950">
+                    {featuredBusinesses.length > 0 ? "Otros negocios" : "Negocios disponibles"}
+                  </h3>
                 </div>
-
-                <div className="mt-auto grid grid-cols-2 gap-2">
-                  <a
-                    href={whatsappUrl(business.whatsapp, business.name)}
-                    target="_blank"
-                    rel="noreferrer"
-                    onClick={() =>
-                      trackMetric({
-                        type: "Clic WhatsApp",
-                        businessId: business.id,
-                        businessName: business.name,
-                        category: business.category
-                      })
-                    }
-                    className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-300 px-4 font-extrabold text-emerald-950"
-                  >
-                    WhatsApp
-                  </a>
-                  <a
-                    href={`tel:${business.whatsapp}`}
-                    className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
-                  >
-                    Llamar
-                  </a>
-                  {business.mapsUrl ? (
-                    <a
-                      href={business.mapsUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
-                    >
-                      Ubicación
-                    </a>
-                  ) : null}
-                  {business.instagram ? (
-                    <a
-                      href={socialUrl(business.instagram, "instagram")}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
-                    >
-                      Instagram
-                    </a>
-                  ) : null}
-                  {business.facebook ? (
-                    <a
-                      href={socialUrl(business.facebook, "facebook")}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
-                    >
-                      Facebook
-                    </a>
-                  ) : null}
-                </div>
-              </article>
-            ))}
-          </div>
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-black text-emerald-900">
+                  {regularBusinesses.length} resultados
+                </span>
+              </div>
+              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {regularBusinesses.map((business) => (
+                  <BusinessCard key={business.id} business={business} />
+                ))}
+              </div>
+            </section>
+          ) : null}
           {!isDirectoryLoading && filteredBusinesses.length === 0 ? (
             <div className="mt-8 rounded-lg border border-emerald-200 bg-white p-5 text-slate-700">
               No encontramos negocios con ese filtro.
