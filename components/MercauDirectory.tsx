@@ -67,12 +67,15 @@ export default function MercauDirectory() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDirectoryLoading, setIsDirectoryLoading] = useState(true);
   const [businesses, setBusinesses] = useState<DirectoryBusiness[]>([]);
   const [directoryStatus, setDirectoryStatus] = useState(
     "Cargando negocios aprobados..."
   );
 
   async function loadBusinesses() {
+    setIsDirectoryLoading(true);
+
     try {
       const response = await fetch("/api/negocios", { cache: "no-store" });
       const result = await response.json();
@@ -104,6 +107,8 @@ export default function MercauDirectory() {
           ? "No se pudo cargar Airtable. Mostrando datos demo temporalmente."
           : "No se pudo cargar el directorio en este momento. Intenta nuevamente en unos minutos."
       );
+    } finally {
+      setIsDirectoryLoading(false);
     }
   }
 
@@ -424,7 +429,7 @@ export default function MercauDirectory() {
               </article>
             ))}
           </div>
-          {filteredBusinesses.length === 0 ? (
+          {!isDirectoryLoading && filteredBusinesses.length === 0 ? (
             <div className="mt-8 rounded-lg border border-emerald-200 bg-white p-5 text-slate-700">
               No encontramos negocios con ese filtro.
             </div>
