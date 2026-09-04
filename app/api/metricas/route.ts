@@ -24,6 +24,7 @@ const allowedTypes = new Set([
   "Visita",
   "Clic WhatsApp",
   "Categoria",
+  "Busqueda",
   "Inscripcion enviada"
 ]);
 

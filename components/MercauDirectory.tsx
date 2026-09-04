@@ -103,6 +103,21 @@ export default function MercauDirectory() {
     trackMetric({ type: "Visita", notes: "Home directorio" });
   }, []);
 
+  useEffect(() => {
+    const search = query.trim();
+    if (search.length < 3) return;
+
+    const timer = window.setTimeout(() => {
+      trackMetric({
+        type: "Busqueda",
+        search,
+        category: activeCategory
+      });
+    }, 1200);
+
+    return () => window.clearTimeout(timer);
+  }, [activeCategory, query]);
+
   const filteredBusinesses = useMemo(() => {
     const term = normalize(query);
 
