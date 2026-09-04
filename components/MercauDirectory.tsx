@@ -20,6 +20,10 @@ const categoryInitials: Record<DirectoryCategory, string> = {
   Emprendimientos: "Em"
 };
 
+function categoryLabel(category: string) {
+  return category === "Ferreteria" ? "Ferretería" : category;
+}
+
 function normalize(value: string) {
   return value
     .toLowerCase()
@@ -268,7 +272,7 @@ export default function MercauDirectory() {
                   {categoryInitials[category.name]}
                 </span>
                 <span>
-                  <strong className="block">{category.name}</strong>
+                  <strong className="block">{categoryLabel(category.name)}</strong>
                   <span className="mt-1 block text-sm leading-5 text-slate-600">
                     {category.hint}
                   </span>
@@ -321,7 +325,7 @@ export default function MercauDirectory() {
               >
                 <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
                   <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
-                    {business.category}
+                    {categoryLabel(business.category)}
                   </span>
                   <span
                     className={`rounded-full px-3 py-1 ${
@@ -465,7 +469,9 @@ export default function MercauDirectory() {
               <select name="category" required className="rounded-lg border px-4 py-3 font-normal">
                 <option value="">Seleccionar categoría</option>
                 {directoryCategories.map((category) => (
-                  <option key={category.name}>{category.name}</option>
+                  <option key={category.name} value={category.name}>
+                    {categoryLabel(category.name)}
+                  </option>
                 ))}
               </select>
             </label>
@@ -485,7 +491,7 @@ export default function MercauDirectory() {
               Domicilios
               <select name="deliveries" className="rounded-lg border px-4 py-3 font-normal">
                 <option>Consultar</option>
-                <option>Si</option>
+                <option value="Si">Sí</option>
                 <option>No</option>
               </select>
             </label>
@@ -493,7 +499,7 @@ export default function MercauDirectory() {
               Quiere vender en Mercáu
               <select name="wantsMarketplace" className="rounded-lg border px-4 py-3 font-normal">
                 <option>Después</option>
-                <option>Si</option>
+                <option value="Si">Sí</option>
               </select>
             </label>
             <label className="grid gap-2 font-bold">
