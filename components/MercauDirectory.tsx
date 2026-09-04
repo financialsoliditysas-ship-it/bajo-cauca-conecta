@@ -435,7 +435,7 @@ export default function MercauDirectory() {
             {directoryStatus}
           </p>
 
-          {featuredBusinesses.length > 0 ? (
+          {!isDirectoryLoading && featuredBusinesses.length > 0 ? (
             <section className="mt-8">
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
@@ -458,7 +458,8 @@ export default function MercauDirectory() {
             </section>
           ) : null}
 
-          {regularBusinesses.length > 0 || featuredBusinesses.length === 0 ? (
+          {!isDirectoryLoading &&
+          (regularBusinesses.length > 0 || featuredBusinesses.length === 0) ? (
             <section className={featuredBusinesses.length > 0 ? "mt-12" : "mt-8"}>
               <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
