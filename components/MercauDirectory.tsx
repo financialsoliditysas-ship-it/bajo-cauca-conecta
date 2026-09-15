@@ -5,7 +5,8 @@ import {
   DirectoryCategory,
   DirectoryBusiness,
   directoryBusinesses,
-  directoryCategories
+  directoryCategories,
+  directoryMunicipalities
 } from "@/data/directory";
 
 const categoryInitials: Record<DirectoryCategory, string> = {
@@ -72,7 +73,7 @@ function BusinessCard({
   const visiblePhone = business.whatsapp.replace(/[^\d+]/g, "");
 
   return (
-    <article className="flex min-h-full flex-col gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft transition hover:-translate-y-0.5 hover:border-emerald-300">
+    <article className="flex min-h-full flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-soft transition hover:-translate-y-0.5 hover:border-emerald-300 sm:p-5">
       <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
         <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
           {categoryLabel(business.category)}
@@ -94,11 +95,17 @@ function BusinessCard({
       </div>
 
       <div>
-        <h3 className="text-2xl font-black leading-tight">{business.name}</h3>
-        <p className="mt-3 leading-7 text-slate-600">{business.description}</p>
+        <h3 className="text-xl font-black leading-tight sm:text-2xl">{business.name}</h3>
+        <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600 sm:text-base">
+          {business.description}
+        </p>
       </div>
 
-      <div className="grid gap-2 rounded-lg bg-slate-50 p-4 text-sm text-slate-700">
+      <div className="grid gap-1.5 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
+        <div className="flex justify-between gap-4">
+          <span className="font-bold text-slate-900">Municipio</span>
+          <span className="text-right">{business.municipality}</span>
+        </div>
         <div className="flex justify-between gap-4">
           <span className="font-bold text-slate-900">Barrio/vereda</span>
           <span className="text-right">{business.neighborhood}</span>
@@ -132,7 +139,7 @@ function BusinessCard({
               category: business.category
             })
           }
-          className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-300 px-4 text-center font-extrabold text-emerald-950"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-300 px-4 text-center font-extrabold text-emerald-950"
         >
           Contactar por WhatsApp
         </a>
@@ -140,13 +147,13 @@ function BusinessCard({
           <button
             type="button"
             onClick={() => onOpen(business)}
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-950 px-4 font-extrabold text-white"
+            className="inline-flex min-h-10 items-center justify-center rounded-lg bg-emerald-950 px-3 text-sm font-extrabold text-white"
           >
             Ver ficha
           </button>
           <a
             href={`tel:${business.whatsapp}`}
-            className="inline-flex min-h-11 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
+            className="inline-flex min-h-10 items-center justify-center rounded-lg bg-emerald-100 px-3 text-sm font-extrabold text-emerald-950"
           >
             Llamar
           </a>
@@ -155,7 +162,7 @@ function BusinessCard({
               href={business.mapsUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-extrabold text-slate-900"
             >
               Ubicación
             </a>
@@ -165,7 +172,7 @@ function BusinessCard({
               href={socialUrl(business.instagram, "instagram")}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-extrabold text-slate-900"
             >
               Instagram
             </a>
@@ -175,7 +182,7 @@ function BusinessCard({
               href={socialUrl(business.facebook, "facebook")}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-11 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-extrabold text-slate-900"
             >
               Facebook
             </a>
@@ -225,6 +232,7 @@ function BusinessDetailModal({
         <p className="mt-5 leading-8 text-slate-700">{business.description}</p>
 
         <div className="mt-6 grid gap-3 rounded-lg bg-slate-50 p-4 text-sm text-slate-700 sm:grid-cols-2">
+          <p><strong className="text-slate-950">Municipio:</strong> {business.municipality}</p>
           <p><strong className="text-slate-950">Barrio/vereda:</strong> {business.neighborhood}</p>
           <p><strong className="text-slate-950">Horario:</strong> {business.hours}</p>
           <p><strong className="text-slate-950">Domicilios:</strong> {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}</p>
@@ -274,6 +282,7 @@ function BusinessDetailModal({
 
 export default function MercauDirectory() {
   const [activeCategory, setActiveCategory] = useState<DirectoryCategory | "">("");
+  const [activeMunicipality, setActiveMunicipality] = useState("");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -351,19 +360,27 @@ export default function MercauDirectory() {
       const categoryMatches = activeCategory
         ? business.category === activeCategory
         : true;
+      const municipalityMatches = activeMunicipality
+        ? business.municipality === activeMunicipality
+        : true;
       const searchable = normalize(
         [
           business.name,
           business.category,
+          business.municipality,
           business.neighborhood,
           business.description,
           business.status
         ].join(" ")
       );
 
-      return categoryMatches && (!term || searchable.includes(term));
+      return (
+        categoryMatches &&
+        municipalityMatches &&
+        (!term || searchable.includes(term))
+      );
     });
-  }, [activeCategory, businesses, query]);
+  }, [activeCategory, activeMunicipality, businesses, query]);
 
   const featuredBusinesses = useMemo(
     () => filteredBusinesses.filter((business) => business.status === "Destacado"),
@@ -426,7 +443,7 @@ export default function MercauDirectory() {
               Mercáu
             </h1>
             <p className="mt-5 text-3xl font-black leading-tight sm:text-4xl">
-              El directorio digital de Nechí
+              Directorio Digital del Bajo Cauca
             </p>
             <p className="mt-5 max-w-2xl text-lg leading-8 text-emerald-50/85">
               Encuentra negocios locales por categoría, contacta por WhatsApp y
@@ -516,7 +533,7 @@ export default function MercauDirectory() {
             Directorio
           </p>
           <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
-            Negocios visibles en Nechí
+            Negocios visibles en el Bajo Cauca
           </h2>
           <div className="mt-8 flex flex-wrap gap-3">
             <label className="grid flex-1 basis-80 gap-2 font-bold">
@@ -533,6 +550,7 @@ export default function MercauDirectory() {
               type="button"
               onClick={() => {
                 setActiveCategory("");
+                setActiveMunicipality("");
                 setQuery("");
               }}
               className="mt-auto inline-flex min-h-12 items-center rounded-lg bg-emerald-100 px-5 font-extrabold text-emerald-950"
@@ -543,6 +561,43 @@ export default function MercauDirectory() {
           <p className="mt-4 max-w-3xl leading-7 text-slate-600">
             {directoryStatus}
           </p>
+
+          <div className="mt-6">
+            <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
+              Filtrar por municipio
+            </p>
+            <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
+              <button
+                type="button"
+                onClick={() => setActiveMunicipality("")}
+                className={`shrink-0 rounded-full px-4 py-2 text-sm font-extrabold ${
+                  activeMunicipality === ""
+                    ? "bg-emerald-950 text-white"
+                    : "bg-white text-emerald-950"
+                }`}
+              >
+                Todos
+              </button>
+              {directoryMunicipalities.map((municipality) => (
+                <button
+                  key={municipality}
+                  type="button"
+                  onClick={() =>
+                    setActiveMunicipality((current) =>
+                      current === municipality ? "" : municipality
+                    )
+                  }
+                  className={`shrink-0 rounded-full px-4 py-2 text-sm font-extrabold ${
+                    activeMunicipality === municipality
+                      ? "bg-emerald-950 text-white"
+                      : "bg-white text-emerald-950"
+                  }`}
+                >
+                  {municipality}
+                </button>
+              ))}
+            </div>
+          </div>
 
           {!isDirectoryLoading && featuredBusinesses.length > 0 ? (
             <section className="mt-8">
@@ -613,7 +668,7 @@ export default function MercauDirectory() {
               Inscripción gratuita
             </p>
             <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
-              Agrega tu negocio al Directorio Digital de Nechí
+              Agrega tu negocio al Directorio Digital del Bajo Cauca
             </h2>
             <p className="mt-5 max-w-xl leading-8 text-slate-600">
               Tu solicitud queda como pendiente para revisión. Cuando sea
@@ -645,6 +700,17 @@ export default function MercauDirectory() {
                 {directoryCategories.map((category) => (
                   <option key={category.name} value={category.name}>
                     {categoryLabel(category.name)}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="grid gap-2 font-bold">
+              Municipio
+              <select name="municipality" required className="rounded-lg border px-4 py-3 font-normal">
+                <option value="">Seleccionar municipio</option>
+                {directoryMunicipalities.map((municipality) => (
+                  <option key={municipality} value={municipality}>
+                    {municipality}
                   </option>
                 ))}
               </select>

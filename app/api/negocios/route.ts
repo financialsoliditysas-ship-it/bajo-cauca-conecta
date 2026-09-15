@@ -6,6 +6,7 @@ const FIELD_IDS = {
   businessName: "fldZAuId3Z7tmNg1y",
   whatsapp: "fldCe1uBzTZhUZQMj",
   category: "fldyp3od5rTBa74il",
+  municipality: "fldAziT6B2rW6HcyT",
   neighborhood: "fldzy7nwjlebys4w0",
   description: "fldlAXHZlQY2PLtvX",
   hours: "fldGg2RLescrYR2Z6",
@@ -165,6 +166,7 @@ export async function GET() {
         id: record.id,
         name: text(fields, FIELD_IDS.businessName, "Negocio sin nombre"),
         category,
+        municipality: text(fields, FIELD_IDS.municipality, "Nechí"),
         neighborhood:
           text(appliedUpdate, UPDATE_FIELD_IDS.newNeighborhood) ||
           text(fields, FIELD_IDS.neighborhood, "Nechí"),

@@ -9,10 +9,19 @@ export type DirectoryCategory =
   | "Transporte"
   | "Emprendimientos";
 
+export type DirectoryMunicipality =
+  | "Nechí"
+  | "Bajo Nechí"
+  | "Caucasia"
+  | "Tarazá"
+  | "Bagre"
+  | "Zaragoza";
+
 export type DirectoryBusiness = {
   id: string;
   name: string;
   category: DirectoryCategory;
+  municipality: DirectoryMunicipality;
   neighborhood: string;
   description: string;
   hours: string;
@@ -24,6 +33,15 @@ export type DirectoryBusiness = {
   status: "Verificado" | "Destacado";
   source: string;
 };
+
+export const directoryMunicipalities: DirectoryMunicipality[] = [
+  "Nechí",
+  "Bajo Nechí",
+  "Caucasia",
+  "Tarazá",
+  "Bagre",
+  "Zaragoza"
+];
 
 export const directoryCategories: Array<{
   name: DirectoryCategory;
@@ -45,6 +63,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-cocina-local",
     name: "Demo Cocina Local",
     category: "Comidas y Bebidas",
+    municipality: "Nechí",
     neighborhood: "Centro",
     description: "Registro demo para mostrar restaurantes y comidas del directorio.",
     hours: "Consultar por WhatsApp",
@@ -56,6 +75,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-ferreteria-nechi",
     name: "Demo Ferretería Nechí",
     category: "Ferreteria",
+    municipality: "Nechí",
     neighborhood: "Zona comercial",
     description: "Registro demo para mostrar búsqueda de ferreterías y materiales.",
     hours: "Consultar por WhatsApp",
@@ -67,6 +87,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-belleza-estilo",
     name: "Demo Belleza y Estilo",
     category: "Belleza",
+    municipality: "Caucasia",
     neighborhood: "Barrio por confirmar",
     description: "Registro demo para mostrar servicios de peluquería, barbería y estética.",
     hours: "Consultar por WhatsApp",
@@ -78,6 +99,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-salud-drogueria",
     name: "Demo Salud y Droguería",
     category: "Salud",
+    municipality: "Tarazá",
     neighborhood: "Centro",
     description: "Registro demo para mostrar farmacias, salud y bienestar.",
     hours: "Consultar por WhatsApp",
@@ -89,6 +111,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-moda-local",
     name: "Demo Moda Local",
     category: "Moda",
+    municipality: "Bagre",
     neighborhood: "Nechí",
     description: "Registro demo para mostrar tiendas de ropa, calzado y accesorios.",
     hours: "Consultar por WhatsApp",
@@ -100,6 +123,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-servicios-tecnicos",
     name: "Demo Servicios Técnicos",
     category: "Servicios",
+    municipality: "Zaragoza",
     neighborhood: "A domicilio",
     description: "Registro demo para mostrar reparaciones, oficios y servicios locales.",
     hours: "Consultar por WhatsApp",
@@ -111,6 +135,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-hogar-variedades",
     name: "Demo Hogar y Variedades",
     category: "Hogar",
+    municipality: "Bajo Nechí",
     neighborhood: "Centro",
     description: "Registro demo para mostrar tiendas de hogar, misceláneas y variedades.",
     hours: "Consultar por WhatsApp",
@@ -122,6 +147,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-emprendimiento-nechi",
     name: "Demo Emprendimiento Nechí",
     category: "Emprendimientos",
+    municipality: "Nechí",
     neighborhood: "Redes sociales",
     description: "Registro demo para mostrar emprendimientos que venden por WhatsApp y redes.",
     hours: "Consultar por WhatsApp",

@@ -33,6 +33,15 @@ const allowedCategories = new Set([
   "Emprendimientos"
 ]);
 
+const allowedMunicipalities = new Set([
+  "Nechí",
+  "Bajo Nechí",
+  "Caucasia",
+  "Tarazá",
+  "Bagre",
+  "Zaragoza"
+]);
+
 function cleanText(value: unknown, max = 240) {
   return String(value || "").trim().slice(0, max);
 }
@@ -72,10 +81,13 @@ export async function POST(request: NextRequest) {
   const ownerName = cleanText(body.ownerName, 100);
   const whatsapp = normalizePhone(body.whatsapp);
   const category = allowedCategories.has(body.category) ? body.category : "";
+  const municipality = allowedMunicipalities.has(body.municipality)
+    ? body.municipality
+    : "";
   const updateToken = randomBytes(18).toString("base64url");
   const updateLink = `${appUrl(request)}/actualizar/${updateToken}`;
 
-  if (!businessName || !ownerName || !whatsapp || !category) {
+  if (!businessName || !ownerName || !whatsapp || !category || !municipality) {
     return NextResponse.json(
       { error: "Faltan campos obligatorios." },
       { status: 400 }
@@ -87,7 +99,7 @@ export async function POST(request: NextRequest) {
     [FIELD_IDS.ownerName]: ownerName,
     [FIELD_IDS.whatsapp]: whatsapp,
     [FIELD_IDS.category]: category,
-    [FIELD_IDS.municipality]: "Nechí",
+    [FIELD_IDS.municipality]: municipality,
     [FIELD_IDS.neighborhood]: cleanText(body.neighborhood, 100),
     [FIELD_IDS.description]: cleanText(body.description, 600),
     [FIELD_IDS.hours]: cleanText(body.hours, 80) || "Consultar por WhatsApp",
