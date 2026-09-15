@@ -11,7 +11,6 @@ export type DirectoryCategory =
 
 export type DirectoryMunicipality =
   | "Nechí"
-  | "Bajo Nechí"
   | "Caucasia"
   | "Tarazá"
   | "Bagre"
@@ -36,7 +35,6 @@ export type DirectoryBusiness = {
 
 export const directoryMunicipalities: DirectoryMunicipality[] = [
   "Nechí",
-  "Bajo Nechí",
   "Caucasia",
   "Tarazá",
   "Bagre",
@@ -135,7 +133,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-hogar-variedades",
     name: "Demo Hogar y Variedades",
     category: "Hogar",
-    municipality: "Bajo Nechí",
+    municipality: "Nechí",
     neighborhood: "Centro",
     description: "Registro demo para mostrar tiendas de hogar, misceláneas y variedades.",
     hours: "Consultar por WhatsApp",

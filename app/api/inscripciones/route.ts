@@ -35,7 +35,6 @@ const allowedCategories = new Set([
 
 const allowedMunicipalities = new Set([
   "Nechí",
-  "Bajo Nechí",
   "Caucasia",
   "Tarazá",
   "Bagre",
