@@ -2,14 +2,14 @@ import "../styles/globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+const siteUrl = "https://mercau-co.vercel.app";
+
 export const metadata: Metadata = {
   applicationName: "Mercáu",
   title: "Mercáu | Directorio Digital del Bajo Cauca",
   description:
     "Mercáu es el directorio digital del Bajo Cauca para encontrar negocios locales, contactar por WhatsApp e inscribir comercios.",
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "https://mercau-co.vercel.app"
-  ),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/"
   },
