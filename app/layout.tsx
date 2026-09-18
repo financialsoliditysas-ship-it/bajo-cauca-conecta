@@ -3,12 +3,40 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  applicationName: "Mercáu",
   title: "Mercáu | Directorio Digital del Bajo Cauca",
   description:
     "Mercáu es el directorio digital del Bajo Cauca para encontrar negocios locales, contactar por WhatsApp e inscribir comercios.",
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL ?? "https://mercau-co.vercel.app"
-  )
+  ),
+  alternates: {
+    canonical: "/"
+  },
+  openGraph: {
+    type: "website",
+    locale: "es_CO",
+    siteName: "Mercáu",
+    title: "Mercáu | Directorio Digital del Bajo Cauca",
+    description:
+      "Encuentra negocios del Bajo Cauca, contacta por WhatsApp o inscribe tu negocio en el directorio digital.",
+    url: "/",
+    images: [
+      {
+        url: "/logo-mercau.png",
+        width: 1024,
+        height: 1024,
+        alt: "Logo de Mercáu"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mercáu | Directorio Digital del Bajo Cauca",
+    description:
+      "Encuentra negocios del Bajo Cauca, contacta por WhatsApp o inscribe tu negocio en el directorio digital.",
+    images: ["/logo-mercau.png"]
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
