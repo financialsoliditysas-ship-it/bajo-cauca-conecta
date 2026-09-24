@@ -1,4 +1,4 @@
-# Bajo Cauca Conecta — Starter (Next.js + Tailwind)
+# Mercáu.co — Starter (Next.js + Tailwind)
 
 Starter listo para desplegar un **marketplace local** con filtros por municipio y categoría, buscador, paginación, SEO básico, `sitemap.xml` y `robots.txt`.
 
