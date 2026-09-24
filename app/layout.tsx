@@ -2,7 +2,7 @@ import "../styles/globals.css";
 import type { Metadata } from "next";
 import Link from "next/link";
 
-const siteUrl = "https://mercau-co.vercel.app";
+const siteUrl = "https://mercau.co";
 
 export const metadata: Metadata = {
   applicationName: "Mercáu",
