@@ -23,10 +23,10 @@ export const metadata: Metadata = {
     url: "/",
     images: [
       {
-        url: "/logo-mercau.png",
-        width: 1024,
-        height: 1024,
-        alt: "Logo de Mercáu"
+        url: "/og-mercau.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Mercáu, Directorio Digital del Bajo Cauca"
       }
     ]
   },
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Mercáu | Directorio Digital del Bajo Cauca",
     description:
       "Encuentra negocios del Bajo Cauca, contacta por WhatsApp o inscribe tu negocio en el directorio digital.",
-    images: ["/logo-mercau.png"]
+    images: ["/og-mercau.jpg"]
   }
 };
 
