@@ -12,55 +12,55 @@ const categoryTheme: Record<DirectoryCategory, { label: string; initials: string
   "Comidas y Bebidas": {
     label: "Comidas y Bebidas",
     initials: "CB",
-    tone: "from-red-500 to-orange-400",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["comida", "restaurante", "bebida", "licor", "licorera", "almuerzo", "cena", "rapida", "domicilio"]
   },
   Hogar: {
     label: "Hogar",
     initials: "Ho",
-    tone: "from-emerald-500 to-teal-500",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["hogar", "tienda", "variedades", "casa", "aseo", "mercado"]
   },
   Salud: {
     label: "Salud",
     initials: "Sa",
-    tone: "from-sky-500 to-cyan-500",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["salud", "drogueria", "farmacia", "medicina", "bienestar"]
   },
   Belleza: {
     label: "Belleza",
     initials: "Be",
-    tone: "from-pink-500 to-rose-400",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["belleza", "barberia", "peluqueria", "unas", "salon", "estetica"]
   },
   Moda: {
     label: "Moda",
     initials: "Mo",
-    tone: "from-violet-500 to-fuchsia-500",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["moda", "ropa", "calzado", "tenis", "accesorios"]
   },
   Ferreteria: {
     label: "Ferretería",
     initials: "Fe",
-    tone: "from-amber-500 to-yellow-500",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["ferreteria", "herramientas", "materiales", "repuestos", "tornillos", "construccion"]
   },
   Servicios: {
     label: "Servicios",
     initials: "Se",
-    tone: "from-blue-500 to-indigo-500",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["servicio", "servicios", "arreglo", "reparacion", "ventilador", "ventiladores", "tecnico", "mantenimiento", "domicilios"]
   },
   Transporte: {
     label: "Transporte",
     initials: "Tr",
-    tone: "from-slate-600 to-slate-800",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["transporte", "moto", "taxi", "mensajeria", "domicilio", "domicilios", "envio"]
   },
   Emprendimientos: {
     label: "Emprendimientos",
     initials: "Em",
-    tone: "from-green-500 to-lime-500",
+    tone: "from-[#D82016] to-[#991B1B]",
     terms: ["emprendimiento", "emprendedor", "marca", "local", "redes"]
   }
 };
@@ -182,11 +182,80 @@ function StoreIcon() {
   );
 }
 
+function CategoryIcon({ category, className = "h-5 w-5" }: { category: DirectoryCategory; className?: string }) {
+  const common = { stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+  const paths: Record<DirectoryCategory, JSX.Element> = {
+    "Comidas y Bebidas": (
+      <>
+        <path d="M7 3v8M4 3v8M10 3v8M4 11h6M7 11v10" {...common} />
+        <path d="M16 4v17M16 4c3 2 4 5 2 8h-2" {...common} />
+      </>
+    ),
+    Hogar: (
+      <>
+        <path d="m3 11 9-7 9 7" {...common} />
+        <path d="M5 10v10h14V10M9 20v-6h6v6" {...common} />
+      </>
+    ),
+    Salud: (
+      <>
+        <path d="M12 21s8-4.5 8-11a5 5 0 0 0-8-4 5 5 0 0 0-8 4c0 6.5 8 11 8 11Z" {...common} />
+        <path d="M12 8v6M9 11h6" {...common} />
+      </>
+    ),
+    Belleza: (
+      <>
+        <path d="M12 3c2 3 5 5.5 5 9a5 5 0 0 1-10 0c0-3.5 3-6 5-9Z" {...common} />
+        <path d="M8 19h8" {...common} />
+      </>
+    ),
+    Moda: (
+      <>
+        <path d="M8 4h8l3 4-3 2v10H8V10L5 8l3-4Z" {...common} />
+        <path d="M10 4c.5 1.4 3.5 1.4 4 0" {...common} />
+      </>
+    ),
+    Ferreteria: (
+      <>
+        <path d="m14 7 3-3 3 3-3 3" {...common} />
+        <path d="M4 20 15 9" {...common} />
+        <path d="m8 16 2 2" {...common} />
+      </>
+    ),
+    Servicios: (
+      <>
+        <path d="M12 3v4M12 17v4M4.2 7.5l3.4 2M16.4 14.5l3.4 2M19.8 7.5l-3.4 2M7.6 14.5l-3.4 2" {...common} />
+        <circle cx="12" cy="12" r="4" {...common} />
+      </>
+    ),
+    Transporte: (
+      <>
+        <path d="M5 16V7h10l4 4v5" {...common} />
+        <path d="M15 8v4h4" {...common} />
+        <circle cx="7" cy="17" r="2" {...common} />
+        <circle cx="17" cy="17" r="2" {...common} />
+      </>
+    ),
+    Emprendimientos: (
+      <>
+        <path d="M12 3v18" {...common} />
+        <path d="M12 7c-4 0-6 2-6 5 4 0 6-2 6-5ZM12 12c4 0 6 2 6 5-4 0-6-2-6-5Z" {...common} />
+      </>
+    )
+  };
+
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      {paths[category]}
+    </svg>
+  );
+}
+
 function BottomNav() {
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 px-1.5 pb-[calc(0.35rem+env(safe-area-inset-bottom))] pt-1 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur md:hidden" aria-label="Navegación principal">
       <div className="mx-auto grid max-w-md grid-cols-4 gap-1 text-[10px] font-bold text-slate-500">
-        <a href="#" className="grid min-h-10 place-items-center rounded-xl text-red-600">
+        <a href="#" className="grid min-h-10 place-items-center rounded-xl text-[#D82016]">
           <StoreIcon />
           Inicio
         </a>
@@ -208,12 +277,10 @@ function BottomNav() {
 }
 
 function BusinessVisual({ business, compact = false }: { business: DirectoryBusiness; compact?: boolean }) {
-  const theme = categoryTheme[business.category] || categoryTheme.Servicios;
-
   return (
-    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${theme.tone} text-white ${compact ? "h-20 w-20 sm:h-24 sm:w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
-      <span className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.35),transparent_32%)]" />
-      <span className="relative text-2xl font-black">{theme.initials}</span>
+    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl border border-[#F3D1CE] bg-[#FFF6F5] text-[#D82016] ${compact ? "h-20 w-20 sm:h-24 sm:w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
+      <span className="absolute inset-x-0 bottom-0 h-1 bg-[#D82016]" />
+      <CategoryIcon category={business.category} className={compact ? "h-8 w-8" : "h-11 w-11"} />
     </div>
   );
 }
@@ -230,7 +297,7 @@ function BusinessCard({
   const isFeatured = business.status === "Destacado";
 
   return (
-    <article className="w-full min-w-0 rounded-[1.25rem] border border-slate-200 bg-white p-2 shadow-soft transition hover:-translate-y-0.5 hover:border-red-200 sm:p-3">
+    <article className="w-full min-w-0 rounded-[1.25rem] border border-[#E5E7EB] bg-white p-2 shadow-soft transition hover:-translate-y-0.5 hover:border-[#F3D1CE] sm:p-3">
       <div className="flex min-w-0 gap-2 sm:gap-3">
         <button type="button" onClick={() => onOpen(business)} className="text-left" aria-label={`Ver ficha de ${business.name}`}>
           <BusinessVisual business={business} compact />
@@ -239,9 +306,9 @@ function BusinessCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-1.5 sm:gap-2">
             <button type="button" onClick={() => onOpen(business)} className="min-w-0 flex-1 text-left">
-              <h3 className="line-clamp-2 text-sm font-black leading-tight text-slate-950 sm:text-base md:text-lg">{business.name}</h3>
+              <h3 className="line-clamp-2 text-sm font-black leading-tight text-[#1F2937] sm:text-base md:text-lg">{business.name}</h3>
             </button>
-            <button type="button" className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-slate-400 hover:bg-red-50 hover:text-red-600 sm:h-9 sm:w-9" aria-label="Guardar negocio">
+            <button type="button" className="grid h-7 w-7 shrink-0 place-items-center rounded-full text-slate-400 hover:bg-[#FFF1F0] hover:text-[#D82016] sm:h-9 sm:w-9" aria-label="Guardar negocio">
               <HeartIcon />
             </button>
           </div>
@@ -255,7 +322,7 @@ function BusinessCard({
             {business.neighborhood ? <span>{business.neighborhood}</span> : null}
           </div>
           {isFeatured ? (
-            <span className="mt-2 inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-black text-amber-800">
+            <span className="mt-2 inline-flex rounded-full bg-[#FFF1F0] px-2.5 py-1 text-xs font-black text-[#D82016]">
               Destacado
             </span>
           ) : null}
@@ -276,7 +343,7 @@ function BusinessCard({
               category: business.category
             })
           }
-          className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-black text-white sm:min-h-10 ${hasWhatsapp ? "bg-emerald-700 hover:bg-emerald-800" : "pointer-events-none bg-slate-300"}`}
+          className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-black text-white sm:min-h-10 ${hasWhatsapp ? "bg-[#D82016] hover:bg-[#B91C1C]" : "pointer-events-none bg-slate-300"}`}
         >
           <WhatsappIcon />
           WhatsApp
@@ -290,7 +357,7 @@ function BusinessCard({
           <span className="hidden sm:inline">Llamar</span>
         </a>
       </div>
-      <a href={`/negocios/${business.id}`} className="mt-2 inline-flex text-xs font-black text-red-600">
+      <a href={`/negocios/${business.id}`} className="mt-2 inline-flex text-xs font-black text-[#D82016]">
         Ver ficha completa
       </a>
     </article>
@@ -339,7 +406,7 @@ function BusinessDetailModal({
                 {business.neighborhood ? ` · ${business.neighborhood}` : ""}
               </p>
             </div>
-            <button type="button" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-50 text-red-600" aria-label="Guardar negocio">
+            <button type="button" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#FFF1F0] text-[#D82016]" aria-label="Guardar negocio">
               <HeartIcon />
             </button>
           </div>
@@ -357,7 +424,7 @@ function BusinessDetailModal({
                   category: business.category
                 })
               }
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white hover:bg-emerald-800"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#D82016] px-4 text-sm font-black text-white hover:bg-[#B91C1C]"
             >
               <WhatsappIcon />
               WhatsApp
@@ -386,12 +453,12 @@ function BusinessDetailModal({
 
           <section className="mt-6 grid gap-2">
             <h3 className="text-lg font-black text-slate-950">Información del negocio</h3>
-            {business.mapsUrl ? <a className="font-bold text-emerald-700 underline" href={business.mapsUrl} target="_blank" rel="noreferrer">Abrir ubicación</a> : null}
-            {business.instagram ? <a className="font-bold text-emerald-700 underline" href={socialUrl(business.instagram, "instagram")} target="_blank" rel="noreferrer">Instagram</a> : null}
-            {business.facebook ? <a className="font-bold text-emerald-700 underline" href={socialUrl(business.facebook, "facebook")} target="_blank" rel="noreferrer">Facebook</a> : null}
+            {business.mapsUrl ? <a className="font-bold text-[#D82016] underline" href={business.mapsUrl} target="_blank" rel="noreferrer">Abrir ubicación</a> : null}
+            {business.instagram ? <a className="font-bold text-[#D82016] underline" href={socialUrl(business.instagram, "instagram")} target="_blank" rel="noreferrer">Instagram</a> : null}
+            {business.facebook ? <a className="font-bold text-[#D82016] underline" href={socialUrl(business.facebook, "facebook")} target="_blank" rel="noreferrer">Facebook</a> : null}
           </section>
 
-          <a href="#inscripcion" onClick={onClose} className="mt-6 inline-flex w-full justify-center text-sm font-black text-red-600">
+          <a href="#inscripcion" onClick={onClose} className="mt-6 inline-flex w-full justify-center text-sm font-black text-[#D82016]">
             Reportar datos incorrectos
           </a>
         </div>
@@ -423,13 +490,13 @@ function EmptyState({
         {municipality ? ` en ${municipality}` : ""}. Puedes probar con otra opción o ayudarnos a sumar ese negocio.
       </p>
       <div className="mt-5 grid gap-2 sm:grid-cols-3">
-        <button type="button" onClick={onClearMunicipality} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-700 px-4 font-black text-emerald-800">
+        <button type="button" onClick={onClearMunicipality} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-[#D82016] px-4 font-black text-[#D82016]">
           Buscar en otro municipio
         </button>
         <button type="button" onClick={onClearSearch} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 px-4 font-black text-slate-900">
           Cambiar búsqueda
         </button>
-        <a href="#inscripcion" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-red-600 px-4 font-black text-white">
+        <a href="#inscripcion" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-[#D82016] px-4 font-black text-white">
           Inscribir mi negocio gratis
         </a>
       </div>
@@ -569,20 +636,20 @@ export default function MercauDirectory() {
 
   return (
     <>
-      <div className="min-h-screen overflow-x-hidden bg-[#fbfaf6] pb-24 md:pb-0">
+      <div className="min-h-screen overflow-x-hidden bg-[#FCFBF9] pb-24 text-[#1F2937] md:pb-0">
         <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 md:px-6 md:py-3">
             <a href="#" className="flex items-center gap-3" aria-label="Inicio Mercáu">
               <img src="/logo-mercau.png" alt="Mercáu" className="h-11 w-11 rounded-2xl object-cover md:h-12 md:w-12" />
               <div>
-                <strong className="block text-2xl font-black leading-none text-red-600 md:text-2xl">Mercáu</strong>
+                <strong className="block text-2xl font-black leading-none text-[#D82016] md:text-2xl">Mercáu</strong>
                 <span className="block max-w-[12rem] truncate text-[11px] font-semibold text-slate-500 md:max-w-none md:text-sm">Directorio Digital del Bajo Cauca</span>
               </div>
             </a>
             <nav className="hidden items-center gap-2 text-sm font-black text-slate-700 md:flex">
               <a href="#directorio" className="rounded-xl px-4 py-2 hover:bg-slate-100">Explorar</a>
-              <a href="#inscripcion" className="rounded-xl bg-emerald-700 px-4 py-2 text-white hover:bg-emerald-800">Inscribir mi negocio</a>
-              <a href="#directorio" className="grid h-10 w-10 place-items-center rounded-full hover:bg-red-50 hover:text-red-600" aria-label="Favoritos"><HeartIcon /></a>
+              <a href="#inscripcion" className="rounded-xl bg-[#D82016] px-4 py-2 text-white hover:bg-[#B91C1C]">Inscribir mi negocio</a>
+              <a href="#directorio" className="grid h-10 w-10 place-items-center rounded-full hover:bg-[#FFF1F0] hover:text-[#D82016]" aria-label="Favoritos"><HeartIcon /></a>
               <a href="#inscripcion" className="rounded-xl border border-slate-200 px-4 py-2 hover:bg-slate-100">Mi cuenta</a>
             </nav>
             <button type="button" className="grid h-10 w-10 place-items-center rounded-full bg-slate-100 text-slate-700 md:hidden" aria-label="Abrir menú">
@@ -595,7 +662,7 @@ export default function MercauDirectory() {
           <div className="min-w-0 overflow-hidden rounded-[1.5rem] md:order-2 md:rounded-[2rem]">
             <div className="relative h-32 min-w-0 overflow-hidden rounded-[1.5rem] sm:h-40 md:h-[25rem] md:rounded-[2rem]">
               <img src="/bajo-cauca-hero.png" alt="Paisaje visual del Bajo Cauca" className="h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#1F2937]/85 via-[#1F2937]/35 to-transparent" />
               <div className="absolute bottom-5 left-4 right-4 text-white sm:bottom-4">
                 <p className="text-[10px] font-black uppercase tracking-normal text-white/85 sm:text-sm md:text-base">Negocios locales, más cerca de ti</p>
                 <h1 className="mt-0.5 max-w-[17rem] text-[1.35rem] font-black leading-tight sm:text-3xl md:max-w-sm md:text-5xl">
@@ -618,7 +685,7 @@ export default function MercauDirectory() {
                   onChange={(event) => setQuery(event.target.value)}
                   type="search"
                   placeholder="¿Qué estás buscando hoy?"
-                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 text-sm font-semibold outline-none ring-red-600/20 placeholder:text-slate-400 focus:border-red-500 focus:ring-4 md:h-12 md:pl-12 md:text-base"
+                  className="h-11 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 text-sm font-semibold outline-none ring-[#D82016]/20 placeholder:text-slate-400 focus:border-[#D82016] focus:ring-4 md:h-12 md:pl-12 md:text-base"
                 />
               </label>
 
@@ -632,7 +699,7 @@ export default function MercauDirectory() {
                       onClick={() => setActiveMunicipality((current) => (current === municipality ? "" : municipality))}
                       className={`min-h-9 shrink-0 rounded-full px-3 text-xs font-black transition md:min-h-11 md:px-4 md:text-sm ${
                         activeMunicipality === municipality
-                          ? "bg-emerald-700 text-white"
+                          ? "bg-[#D82016] text-white"
                           : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                       }`}
                     >
@@ -643,10 +710,10 @@ export default function MercauDirectory() {
               </div>
 
               <div className="mt-3 grid min-w-0 gap-2 sm:grid-cols-[1fr_auto] md:mt-4">
-                <a href="#directorio" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-red-600 px-5 text-sm font-black text-white hover:bg-red-700 md:min-h-12 md:text-base">
+                <a href="#directorio" className="inline-flex min-h-11 items-center justify-center rounded-2xl bg-[#D82016] px-5 text-sm font-black text-white hover:bg-[#B91C1C] md:min-h-12 md:text-base">
                   Explorar directorio
                 </a>
-                <a href="#inscripcion" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-5 text-sm font-black text-white hover:bg-emerald-800 md:min-h-12 md:text-base">
+                <a href="#inscripcion" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-2xl border border-[#D82016] bg-white px-5 text-sm font-black text-[#D82016] hover:bg-[#FFF1F0] md:min-h-12 md:text-base">
                   <StoreIcon />
                   Inscribir mi negocio gratis
                 </a>
@@ -658,8 +725,8 @@ export default function MercauDirectory() {
         <section className="mx-auto w-full max-w-7xl min-w-0 px-3 md:px-6">
           <div className="min-w-0 rounded-[1.5rem] bg-white p-3 shadow-soft md:rounded-[2rem] md:p-5">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-black text-slate-950 md:text-xl">Categorías principales</h2>
-              <button type="button" onClick={() => setActiveCategory("")} className="text-sm font-black text-emerald-700 underline">Ver todas</button>
+              <h2 className="text-lg font-black text-[#1F2937] md:text-xl">Categorías principales</h2>
+              <button type="button" onClick={() => setActiveCategory("")} className="text-sm font-black text-[#D82016] underline">Ver todas</button>
             </div>
             <div className="no-scrollbar mt-3 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] md:mt-4 md:grid md:grid-cols-9 md:gap-3 md:overflow-visible">
               {directoryCategories.map((category) => {
@@ -674,14 +741,14 @@ export default function MercauDirectory() {
                     }}
                     className={`grid min-h-20 w-20 shrink-0 place-items-center rounded-2xl border p-2 text-center transition sm:min-h-28 sm:w-28 sm:p-3 md:w-auto ${
                       activeCategory === category.name
-                        ? "border-red-500 bg-red-50 ring-4 ring-red-600/10"
-                        : "border-slate-200 bg-white hover:border-red-200"
+                        ? "border-[#D82016] bg-[#FFF1F0] ring-4 ring-[#D82016]/10"
+                        : "border-slate-200 bg-white hover:border-[#F3D1CE]"
                     }`}
                   >
-                    <span className={`grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br ${theme.tone} text-[11px] font-black text-white sm:h-12 sm:w-12 sm:text-sm`}>
-                      {theme.initials}
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-[#FFF1F0] text-[#D82016] sm:h-12 sm:w-12">
+                      <CategoryIcon category={category.name} className="h-5 w-5 sm:h-6 sm:w-6" />
                     </span>
-                    <span className="mt-1.5 text-[11px] font-black leading-tight text-slate-950 sm:text-sm">{theme.label}</span>
+                    <span className="mt-1.5 text-[11px] font-black leading-tight text-[#1F2937] sm:text-sm">{theme.label}</span>
                   </button>
                 );
               })}
@@ -691,7 +758,7 @@ export default function MercauDirectory() {
 
         <section id="directorio" className="mx-auto mt-4 grid w-full max-w-7xl min-w-0 gap-4 px-3 md:mt-6 md:grid-cols-[18rem_1fr] md:gap-5 md:px-6">
           <aside className="hidden self-start rounded-[2rem] bg-white p-5 shadow-soft md:block">
-            <h2 className="text-lg font-black text-slate-950">Filtros</h2>
+            <h2 className="text-lg font-black text-[#1F2937]">Filtros</h2>
             <div className="mt-5">
               <p className="text-sm font-black text-slate-700">Municipio</p>
               <div className="mt-2 grid gap-2">
@@ -733,7 +800,7 @@ export default function MercauDirectory() {
                   <input
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
-                    className="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 font-semibold outline-none ring-red-600/20 placeholder:text-slate-400 focus:border-red-500 focus:ring-4"
+                    className="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 font-semibold outline-none ring-[#D82016]/20 placeholder:text-slate-400 focus:border-[#D82016] focus:ring-4"
                     type="search"
                     placeholder="Ferretería, arreglo de ventiladores, domicilios..."
                   />
@@ -752,11 +819,11 @@ export default function MercauDirectory() {
               </div>
 
               <div className="no-scrollbar mt-4 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] md:hidden">
-                <button type="button" onClick={() => setActiveCategory("")} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === "" ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}>
+                <button type="button" onClick={() => setActiveCategory("")} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === "" ? "bg-[#D82016] text-white" : "bg-slate-100 text-slate-700"}`}>
                   Todos
                 </button>
                 {directoryCategories.slice(0, 5).map((category) => (
-                  <button key={category.name} type="button" onClick={() => setActiveCategory(category.name)} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === category.name ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}>
+                  <button key={category.name} type="button" onClick={() => setActiveCategory(category.name)} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === category.name ? "bg-[#D82016] text-white" : "bg-slate-100 text-slate-700"}`}>
                     {displayCategory(category.name)}
                   </button>
                 ))}
@@ -764,7 +831,7 @@ export default function MercauDirectory() {
 
               <div className="no-scrollbar mt-3 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] md:hidden">
                 {directoryMunicipalities.map((municipality) => (
-                  <button key={municipality} type="button" onClick={() => setActiveMunicipality((current) => (current === municipality ? "" : municipality))} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeMunicipality === municipality ? "bg-emerald-700 text-white" : "bg-slate-100 text-slate-700"}`}>
+                  <button key={municipality} type="button" onClick={() => setActiveMunicipality((current) => (current === municipality ? "" : municipality))} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeMunicipality === municipality ? "bg-[#D82016] text-white" : "bg-slate-100 text-slate-700"}`}>
                     {municipality}
                   </button>
                 ))}
@@ -773,8 +840,8 @@ export default function MercauDirectory() {
 
             <div className="flex min-w-0 flex-wrap items-end justify-between gap-3 md:mt-5">
               <div>
-                <p className="text-xs font-black uppercase tracking-normal text-red-600 md:text-sm">Resultados</p>
-                <h2 className="text-xl font-black text-slate-950 md:text-2xl">{resultsLabel}</h2>
+                <p className="text-xs font-black uppercase tracking-normal text-[#D82016] md:text-sm">Resultados</p>
+                <h2 className="text-xl font-black text-[#1F2937] md:text-2xl">{resultsLabel}</h2>
                 <p className="mt-1 text-xs font-semibold text-slate-500 md:text-sm">{directoryStatus}</p>
               </div>
               <span className="rounded-full bg-white px-3 py-1.5 text-[11px] font-black text-slate-700 shadow-soft sm:px-4 sm:text-sm">Ordenar por relevancia</span>
@@ -802,8 +869,8 @@ export default function MercauDirectory() {
         <section id="inscripcion" className="mx-auto mt-8 max-w-7xl px-4 pb-10 md:px-6">
           <div className="grid gap-6 rounded-[2rem] bg-white p-5 shadow-soft md:grid-cols-[0.85fr_1.15fr] md:p-7">
             <div>
-              <p className="text-sm font-black uppercase tracking-normal text-emerald-700">Inscripción gratuita</p>
-              <h2 className="mt-2 text-3xl font-black leading-tight text-slate-950 md:text-4xl">
+              <p className="text-sm font-black uppercase tracking-normal text-[#D82016]">Inscripción gratuita</p>
+              <h2 className="mt-2 text-3xl font-black leading-tight text-[#1F2937] md:text-4xl">
                 Inscribe tu negocio en Mercáu
               </h2>
               <p className="mt-3 leading-7 text-slate-600">
@@ -819,19 +886,19 @@ export default function MercauDirectory() {
             <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2">
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Nombre del negocio
-                <input name="businessName" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="businessName" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Propietario o contacto
-                <input name="ownerName" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="ownerName" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 WhatsApp
-                <input name="whatsapp" required inputMode="tel" placeholder="Ej: 3001234567" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="whatsapp" required inputMode="tel" placeholder="Ej: 3001234567" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Categoría
-                <select name="category" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20">
+                <select name="category" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20">
                   <option value="">Seleccionar categoría</option>
                   {directoryCategories.map((category) => (
                     <option key={category.name} value={category.name}>{displayCategory(category.name)}</option>
@@ -840,7 +907,7 @@ export default function MercauDirectory() {
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Municipio
-                <select name="municipality" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20">
+                <select name="municipality" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20">
                   <option value="">Seleccionar municipio</option>
                   {directoryMunicipalities.map((municipality) => (
                     <option key={municipality} value={municipality}>{municipality}</option>
@@ -849,19 +916,19 @@ export default function MercauDirectory() {
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Barrio o vereda
-                <input name="neighborhood" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="neighborhood" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800 sm:col-span-2">
                 Descripción corta
-                <textarea name="description" required rows={3} className="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <textarea name="description" required rows={3} className="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Horario
-                <input name="hours" placeholder="Ej: lunes a sábado" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="hours" placeholder="Ej: lunes a sábado" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Domicilios
-                <select name="deliveries" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20">
+                <select name="deliveries" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20">
                   <option>Consultar</option>
                   <option value="Si">Sí</option>
                   <option>No</option>
@@ -869,22 +936,22 @@ export default function MercauDirectory() {
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Instagram o usuario
-                <input name="instagram" type="text" placeholder="@minegocio" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="instagram" type="text" placeholder="@minegocio" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <label className="grid gap-2 text-sm font-black text-slate-800">
                 Facebook o página
-                <input name="facebook" type="text" placeholder="Mi Negocio" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+                <input name="facebook" type="text" placeholder="Mi Negocio" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-[#D82016] focus:ring-4 focus:ring-[#D82016]/20" />
               </label>
               <input type="hidden" name="wantsMarketplace" value="Después" />
-              <button type="submit" disabled={isSubmitting} className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-red-600 px-5 py-4 font-black text-white hover:bg-red-700 disabled:opacity-60 sm:col-span-2">
+              <button type="submit" disabled={isSubmitting} className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-[#D82016] px-5 py-4 font-black text-white hover:bg-[#B91C1C] disabled:opacity-60 sm:col-span-2">
                 {isSubmitting ? "Enviando..." : "Enviar inscripción para revisión"}
               </button>
-              {status ? <p className="rounded-2xl bg-emerald-50 p-4 font-bold text-emerald-900 sm:col-span-2">{status}</p> : null}
+              {status ? <p className="rounded-2xl bg-[#FFF1F0] p-4 font-bold text-[#1F2937] sm:col-span-2">{status}</p> : null}
             </form>
           </div>
         </section>
 
-        <footer className="border-t border-slate-200 bg-red-600 text-white">
+        <footer className="border-t border-slate-200 bg-[#D82016] text-white">
           <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-sm font-bold md:px-6">
             <strong className="text-2xl font-black">Mercáu</strong>
             <span>Cáceres · Caucasia · El Bagre · Nechí · Tarazá · Zaragoza</span>

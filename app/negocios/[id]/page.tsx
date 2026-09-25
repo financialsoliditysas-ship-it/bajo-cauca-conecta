@@ -104,17 +104,17 @@ export default async function BusinessPage({
   const shareMessage = `Mira ${business.name} en Mercáu: ${shareUrl}`;
 
   return (
-    <div className="min-h-screen bg-[#fbfaf6] text-slate-950">
+    <div className="min-h-screen bg-[#FCFBF9] text-[#1F2937]">
       <header className="border-b border-slate-200 bg-white">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center gap-3" aria-label="Volver a Mercáu">
             <img src="/logo-mercau.png" alt="Mercáu" className="h-11 w-11 rounded-2xl object-cover" />
             <div>
-              <strong className="block text-2xl font-black leading-none text-red-600">Mercáu</strong>
+              <strong className="block text-2xl font-black leading-none text-[#D82016]">Mercáu</strong>
               <span className="block text-xs font-semibold text-slate-500">Directorio Digital del Bajo Cauca</span>
             </div>
           </Link>
-          <Link href="/#directorio" className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-black text-slate-800">
+          <Link href="/#directorio" className="rounded-xl bg-slate-100 px-4 py-2 text-sm font-black text-[#1F2937] hover:bg-[#FFF1F0] hover:text-[#D82016]">
             Directorio
           </Link>
         </div>
@@ -122,8 +122,8 @@ export default async function BusinessPage({
 
       <main className="mx-auto max-w-5xl px-4 py-5 md:py-8">
         <article className="overflow-hidden rounded-[1.75rem] bg-white shadow-soft">
-          <div className="grid min-h-40 place-items-center bg-gradient-to-br from-red-600 to-emerald-800 px-5 py-8 text-white">
-            <span className="rounded-full bg-white/15 px-4 py-2 text-sm font-black">
+          <div className="grid min-h-40 place-items-center bg-[#D82016] px-5 py-8 text-white">
+            <span className="rounded-full bg-white/15 px-4 py-2 text-sm font-black ring-1 ring-white/30">
               {displayCategory(business.category)}
             </span>
             <h1 className="mt-4 max-w-3xl text-center text-3xl font-black leading-tight md:text-5xl">
@@ -143,7 +143,7 @@ export default async function BusinessPage({
               </section>
 
               <section className="mt-6 grid gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
-                <h2 className="text-lg font-black text-slate-950">Datos del negocio</h2>
+                <h2 className="text-lg font-black text-[#1F2937]">Datos del negocio</h2>
                 <p><strong>Categoría:</strong> {displayCategory(business.category)}</p>
                 <p><strong>Municipio:</strong> {business.municipality}</p>
                 <p><strong>Zona:</strong> {business.neighborhood || "Consultar"}</p>
@@ -153,9 +153,9 @@ export default async function BusinessPage({
 
               <section className="mt-6 grid gap-2">
                 <h2 className="text-lg font-black">Enlaces</h2>
-                {business.mapsUrl ? <a className="font-bold text-emerald-700 underline" href={business.mapsUrl} target="_blank" rel="noreferrer">Abrir ubicación</a> : null}
-                {business.instagram ? <a className="font-bold text-emerald-700 underline" href={socialUrl(business.instagram, "instagram")} target="_blank" rel="noreferrer">Instagram</a> : null}
-                {business.facebook ? <a className="font-bold text-emerald-700 underline" href={socialUrl(business.facebook, "facebook")} target="_blank" rel="noreferrer">Facebook</a> : null}
+                {business.mapsUrl ? <a className="font-bold text-[#D82016] underline" href={business.mapsUrl} target="_blank" rel="noreferrer">Abrir ubicación</a> : null}
+                {business.instagram ? <a className="font-bold text-[#D82016] underline" href={socialUrl(business.instagram, "instagram")} target="_blank" rel="noreferrer">Instagram</a> : null}
+                {business.facebook ? <a className="font-bold text-[#D82016] underline" href={socialUrl(business.facebook, "facebook")} target="_blank" rel="noreferrer">Facebook</a> : null}
               </section>
             </div>
 
@@ -166,7 +166,7 @@ export default async function BusinessPage({
                   href={whatsappUrl(business.whatsapp, business.name)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-emerald-700 px-4 font-black text-white hover:bg-emerald-800"
+                  className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-[#D82016] px-4 font-black text-white hover:bg-[#B91C1C]"
                 >
                   Contactar por WhatsApp
                 </a>
