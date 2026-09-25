@@ -4,7 +4,6 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   DirectoryBusiness,
   DirectoryCategory,
-  directoryBusinesses,
   directoryCategories,
   directoryMunicipalities
 } from "@/data/directory";
@@ -460,16 +459,8 @@ export default function MercauDirectory() {
       setBusinesses([]);
       setDirectoryStatus("Todavía no hay negocios aprobados para mostrar.");
     } catch (error) {
-      setBusinesses(
-        process.env.NEXT_PUBLIC_ALLOW_DEMO_DATA === "true"
-          ? directoryBusinesses
-          : []
-      );
-      setDirectoryStatus(
-        process.env.NEXT_PUBLIC_ALLOW_DEMO_DATA === "true"
-          ? "No se pudo cargar Airtable. Mostrando datos demo temporalmente."
-          : "No se pudo cargar el directorio en este momento. Intenta nuevamente en unos minutos."
-      );
+      setBusinesses([]);
+      setDirectoryStatus("No se pudo cargar el directorio en este momento. Intenta nuevamente en unos minutos.");
     } finally {
       setIsDirectoryLoading(false);
     }
