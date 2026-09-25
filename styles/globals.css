@@ -15,6 +15,15 @@ body {
   @apply bg-white text-slate-900 antialiased;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 .container {
   @apply max-w-6xl mx-auto px-4;
 }

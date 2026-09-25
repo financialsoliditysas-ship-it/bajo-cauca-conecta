@@ -180,21 +180,21 @@ function StoreIcon() {
 
 function BottomNav() {
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 px-4 py-2 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur md:hidden" aria-label="Navegación principal">
-      <div className="mx-auto grid max-w-md grid-cols-4 gap-1 text-xs font-bold text-slate-500">
-        <a href="#" className="grid min-h-12 place-items-center rounded-xl text-red-600">
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 px-2 pb-[calc(0.45rem+env(safe-area-inset-bottom))] pt-1.5 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur md:hidden" aria-label="Navegación principal">
+      <div className="mx-auto grid max-w-md grid-cols-4 gap-1 text-[11px] font-bold text-slate-500">
+        <a href="#" className="grid min-h-11 place-items-center rounded-xl text-red-600">
           <StoreIcon />
           Inicio
         </a>
-        <a href="#directorio" className="grid min-h-12 place-items-center rounded-xl">
+        <a href="#directorio" className="grid min-h-11 place-items-center rounded-xl">
           <SearchIcon className="h-5 w-5" />
           Buscar
         </a>
-        <a href="#directorio" className="grid min-h-12 place-items-center rounded-xl">
+        <a href="#directorio" className="grid min-h-11 place-items-center rounded-xl">
           <HeartIcon />
           Favoritos
         </a>
-        <a href="#inscripcion" className="grid min-h-12 place-items-center rounded-xl">
+        <a href="#inscripcion" className="grid min-h-11 place-items-center rounded-xl">
           <MenuIcon />
           Mi cuenta
         </a>
@@ -207,7 +207,7 @@ function BusinessVisual({ business, compact = false }: { business: DirectoryBusi
   const theme = categoryTheme[business.category] || categoryTheme.Servicios;
 
   return (
-    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${theme.tone} text-white ${compact ? "h-24 w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
+    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${theme.tone} text-white ${compact ? "h-20 w-20 sm:h-24 sm:w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
       <span className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.35),transparent_32%)]" />
       <span className="relative text-2xl font-black">{theme.initials}</span>
     </div>
@@ -226,8 +226,8 @@ function BusinessCard({
   const isFeatured = business.status === "Destacado";
 
   return (
-    <article className="rounded-3xl border border-slate-200 bg-white p-3 shadow-soft transition hover:-translate-y-0.5 hover:border-red-200">
-      <div className="flex gap-3">
+    <article className="w-full min-w-0 rounded-2xl border border-slate-200 bg-white p-2.5 shadow-soft transition hover:-translate-y-0.5 hover:border-red-200 sm:p-3">
+      <div className="flex min-w-0 gap-2.5 sm:gap-3">
         <button type="button" onClick={() => onOpen(business)} className="text-left" aria-label={`Ver ficha de ${business.name}`}>
           <BusinessVisual business={business} compact />
         </button>
@@ -235,14 +235,14 @@ function BusinessCard({
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-2">
             <button type="button" onClick={() => onOpen(business)} className="min-w-0 flex-1 text-left">
-              <h3 className="truncate text-base font-black leading-tight text-slate-950 md:text-lg">{business.name}</h3>
+              <h3 className="line-clamp-2 text-sm font-black leading-tight text-slate-950 sm:text-base md:text-lg">{business.name}</h3>
             </button>
-            <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-slate-400 hover:bg-red-50 hover:text-red-600" aria-label="Guardar negocio">
+            <button type="button" className="grid h-8 w-8 shrink-0 place-items-center rounded-full text-slate-400 hover:bg-red-50 hover:text-red-600 sm:h-9 sm:w-9" aria-label="Guardar negocio">
               <HeartIcon />
             </button>
           </div>
 
-          <p className="mt-1 text-sm font-semibold text-slate-700">{displayCategory(business.category)}</p>
+          <p className="mt-1 text-xs font-semibold text-slate-700 sm:text-sm">{displayCategory(business.category)}</p>
           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-slate-500">
             <span className="inline-flex items-center gap-1">
               <LocationIcon className="h-3.5 w-3.5" />
@@ -258,7 +258,7 @@ function BusinessCard({
         </div>
       </div>
 
-      <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
+      <div className="mt-2.5 grid grid-cols-[1fr_auto] gap-2">
         <a
           href={whatsappUrl(business.whatsapp, business.name)}
           target="_blank"
@@ -272,7 +272,7 @@ function BusinessCard({
               category: business.category
             })
           }
-          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-black text-white ${hasWhatsapp ? "bg-emerald-700 hover:bg-emerald-800" : "pointer-events-none bg-slate-300"}`}
+          className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-black text-white ${hasWhatsapp ? "bg-emerald-700 hover:bg-emerald-800" : "pointer-events-none bg-slate-300"}`}
         >
           <WhatsappIcon />
           WhatsApp
@@ -280,7 +280,7 @@ function BusinessCard({
         <a
           href={callPhone ? `tel:${callPhone}` : "#"}
           aria-disabled={!callPhone}
-          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-black ${callPhone ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "pointer-events-none bg-slate-100 text-slate-400"}`}
+          className={`inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-black ${callPhone ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "pointer-events-none bg-slate-100 text-slate-400"}`}
         >
           <PhoneIcon />
           <span className="hidden sm:inline">Llamar</span>
@@ -569,7 +569,7 @@ export default function MercauDirectory() {
 
   return (
     <>
-      <div className="min-h-screen bg-[#fbfaf6] pb-24 md:pb-0">
+      <div className="min-h-screen overflow-x-hidden bg-[#fbfaf6] pb-24 md:pb-0">
         <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
             <a href="#" className="flex items-center gap-3" aria-label="Inicio Mercáu">
@@ -591,25 +591,25 @@ export default function MercauDirectory() {
           </div>
         </header>
 
-        <section className="mx-auto grid max-w-7xl gap-0 px-4 pb-5 pt-4 md:grid-cols-[1fr_0.9fr] md:items-center md:gap-6 md:px-6 md:py-8">
-          <div className="overflow-hidden rounded-[2rem] md:order-2">
-            <div className="relative h-44 overflow-hidden rounded-[2rem] md:h-[25rem]">
+        <section className="mx-auto grid w-full max-w-7xl min-w-0 gap-0 px-4 pb-5 pt-3 md:grid-cols-[1fr_0.9fr] md:items-center md:gap-6 md:px-6 md:py-8">
+          <div className="min-w-0 overflow-hidden rounded-[1.5rem] md:order-2 md:rounded-[2rem]">
+            <div className="relative h-40 min-w-0 overflow-hidden rounded-[1.5rem] sm:h-44 md:h-[25rem] md:rounded-[2rem]">
               <img src="/bajo-cauca-hero.png" alt="Paisaje visual del Bajo Cauca" className="h-full w-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <p className="text-sm font-black uppercase tracking-normal text-white/85 md:text-base">Negocios locales, más cerca de ti</p>
-                <h1 className="mt-1 max-w-sm text-3xl font-black leading-tight md:text-5xl">
+              <div className="absolute bottom-7 left-4 right-4 text-white sm:bottom-4">
+                <p className="text-[11px] font-black uppercase tracking-normal text-white/85 sm:text-sm md:text-base">Negocios locales, más cerca de ti</p>
+                <h1 className="mt-1 max-w-[18rem] text-2xl font-black leading-tight sm:text-3xl md:max-w-sm md:text-5xl">
                   Encuentra negocios cerca de ti
                 </h1>
-                <p className="mt-1 max-w-sm text-sm font-semibold text-white/90 md:text-base">
+                <p className="mt-1 max-w-[18rem] text-xs font-semibold text-white/90 sm:text-sm md:max-w-sm md:text-base">
                   Compra local. Apoya nuestra gente.
                 </p>
               </div>
             </div>
           </div>
 
-          <div className="relative z-10 -mt-7 md:order-1 md:mt-0">
-            <div className="rounded-[2rem] border border-slate-200 bg-white p-4 shadow-soft md:p-5">
+          <div className="relative z-10 -mt-4 min-w-0 md:order-1 md:mt-0">
+            <div className="w-full min-w-0 rounded-[1.5rem] border border-slate-200 bg-white p-4 shadow-soft md:rounded-[2rem] md:p-5">
               <label className="relative block">
                 <span className="sr-only">Buscar negocio o servicio</span>
                 <SearchIcon className="absolute left-4 top-1/2 h-6 w-6 -translate-y-1/2 text-slate-400" />
@@ -618,13 +618,13 @@ export default function MercauDirectory() {
                   onChange={(event) => setQuery(event.target.value)}
                   type="search"
                   placeholder="¿Qué estás buscando hoy?"
-                  className="h-14 w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-base font-semibold outline-none ring-red-600/20 placeholder:text-slate-400 focus:border-red-500 focus:ring-4"
+                  className="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-base font-semibold outline-none ring-red-600/20 placeholder:text-slate-400 focus:border-red-500 focus:ring-4"
                 />
               </label>
 
               <div className="mt-4">
                 <p className="text-sm font-black text-slate-950">Filtra por municipio</p>
-                <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+                <div className="no-scrollbar mt-2 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch]">
                   {directoryMunicipalities.map((municipality) => (
                     <button
                       key={municipality}
@@ -642,7 +642,7 @@ export default function MercauDirectory() {
                 </div>
               </div>
 
-              <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+              <div className="mt-4 grid min-w-0 gap-2 sm:grid-cols-[1fr_auto]">
                 <a href="#directorio" className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-red-600 px-5 font-black text-white hover:bg-red-700">
                   Explorar directorio
                 </a>
@@ -655,13 +655,13 @@ export default function MercauDirectory() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-7xl px-4 md:px-6">
-          <div className="rounded-[2rem] bg-white p-4 shadow-soft md:p-5">
+        <section className="mx-auto w-full max-w-7xl min-w-0 px-4 md:px-6">
+          <div className="min-w-0 rounded-[1.5rem] bg-white p-4 shadow-soft md:rounded-[2rem] md:p-5">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-xl font-black text-slate-950">Categorías principales</h2>
               <button type="button" onClick={() => setActiveCategory("")} className="text-sm font-black text-emerald-700 underline">Ver todas</button>
             </div>
-            <div className="mt-4 flex gap-3 overflow-x-auto pb-1 md:grid md:grid-cols-9 md:overflow-visible">
+            <div className="no-scrollbar mt-4 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] md:grid md:grid-cols-9 md:gap-3 md:overflow-visible">
               {directoryCategories.map((category) => {
                 const theme = categoryTheme[category.name];
                 return (
@@ -672,16 +672,16 @@ export default function MercauDirectory() {
                       setActiveCategory((current) => (current === category.name ? "" : category.name));
                       trackMetric({ type: "Categoria", category: category.name, search: query });
                     }}
-                    className={`grid min-h-28 w-28 shrink-0 place-items-center rounded-2xl border p-3 text-center transition md:w-auto ${
+                    className={`grid min-h-24 w-24 shrink-0 place-items-center rounded-2xl border p-2.5 text-center transition sm:min-h-28 sm:w-28 sm:p-3 md:w-auto ${
                       activeCategory === category.name
                         ? "border-red-500 bg-red-50 ring-4 ring-red-600/10"
                         : "border-slate-200 bg-white hover:border-red-200"
                     }`}
                   >
-                    <span className={`grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br ${theme.tone} text-sm font-black text-white`}>
+                    <span className={`grid h-10 w-10 place-items-center rounded-full bg-gradient-to-br ${theme.tone} text-xs font-black text-white sm:h-12 sm:w-12 sm:text-sm`}>
                       {theme.initials}
                     </span>
-                    <span className="mt-2 text-sm font-black leading-tight text-slate-950">{theme.label}</span>
+                    <span className="mt-2 text-xs font-black leading-tight text-slate-950 sm:text-sm">{theme.label}</span>
                   </button>
                 );
               })}
@@ -689,7 +689,7 @@ export default function MercauDirectory() {
           </div>
         </section>
 
-        <section id="directorio" className="mx-auto mt-6 grid max-w-7xl gap-5 px-4 md:grid-cols-[18rem_1fr] md:px-6">
+        <section id="directorio" className="mx-auto mt-6 grid w-full max-w-7xl min-w-0 gap-5 px-4 md:grid-cols-[18rem_1fr] md:px-6">
           <aside className="hidden self-start rounded-[2rem] bg-white p-5 shadow-soft md:block">
             <h2 className="text-lg font-black text-slate-950">Filtros</h2>
             <div className="mt-5">
@@ -724,9 +724,9 @@ export default function MercauDirectory() {
             </div>
           </aside>
 
-          <div>
-            <div className="rounded-[2rem] bg-white p-4 shadow-soft md:p-5">
-              <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+          <div className="min-w-0">
+            <div className="min-w-0 rounded-[1.5rem] bg-white p-4 shadow-soft md:rounded-[2rem] md:p-5">
+              <div className="grid min-w-0 gap-3 md:grid-cols-[1fr_auto] md:items-end">
                 <label className="relative block">
                   <span className="mb-2 block text-sm font-black text-slate-700">Buscar en el directorio</span>
                   <SearchIcon className="absolute bottom-4 left-4 h-5 w-5 text-slate-400" />
@@ -751,7 +751,7 @@ export default function MercauDirectory() {
                 </button>
               </div>
 
-              <div className="mt-4 flex gap-2 overflow-x-auto pb-1 md:hidden">
+              <div className="no-scrollbar mt-4 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] md:hidden">
                 <button type="button" onClick={() => setActiveCategory("")} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === "" ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}>
                   Todos
                 </button>
@@ -762,7 +762,7 @@ export default function MercauDirectory() {
                 ))}
               </div>
 
-              <div className="mt-3 flex gap-2 overflow-x-auto pb-1 md:hidden">
+              <div className="no-scrollbar mt-3 flex max-w-full gap-2 overflow-x-auto pb-1 [-webkit-overflow-scrolling:touch] md:hidden">
                 {directoryMunicipalities.map((municipality) => (
                   <button key={municipality} type="button" onClick={() => setActiveMunicipality((current) => (current === municipality ? "" : municipality))} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeMunicipality === municipality ? "bg-emerald-700 text-white" : "bg-slate-100 text-slate-700"}`}>
                     {municipality}
@@ -771,16 +771,16 @@ export default function MercauDirectory() {
               </div>
             </div>
 
-            <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
+            <div className="mt-5 flex min-w-0 flex-wrap items-end justify-between gap-3">
               <div>
                 <p className="text-sm font-black uppercase tracking-normal text-red-600">Resultados</p>
                 <h2 className="text-2xl font-black text-slate-950">{resultsLabel}</h2>
                 <p className="mt-1 text-sm font-semibold text-slate-500">{directoryStatus}</p>
               </div>
-              <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-soft">Ordenar por relevancia</span>
+              <span className="rounded-full bg-white px-3 py-2 text-xs font-black text-slate-700 shadow-soft sm:px-4 sm:text-sm">Ordenar por relevancia</span>
             </div>
 
-            <div className="mt-4 grid gap-3">
+            <div className="mt-4 grid min-w-0 gap-3">
               {isDirectoryLoading ? (
                 <div className="rounded-[2rem] bg-white p-6 text-center font-bold text-slate-600 shadow-soft">Cargando negocios...</div>
               ) : sortedBusinesses.length > 0 ? (
