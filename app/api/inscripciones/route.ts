@@ -34,12 +34,18 @@ const allowedCategories = new Set([
 ]);
 
 const allowedMunicipalities = new Set([
+  "Cáceres",
   "Nechí",
   "Caucasia",
   "Tarazá",
-  "Bagre",
+  "El Bagre",
   "Zaragoza"
 ]);
+
+function normalizeMunicipality(value: unknown) {
+  const municipality = cleanText(value, 80);
+  return municipality === "Bagre" ? "El Bagre" : municipality;
+}
 
 function cleanText(value: unknown, max = 240) {
   return String(value || "").trim().slice(0, max);
@@ -80,8 +86,9 @@ export async function POST(request: NextRequest) {
   const ownerName = cleanText(body.ownerName, 100);
   const whatsapp = normalizePhone(body.whatsapp);
   const category = allowedCategories.has(body.category) ? body.category : "";
-  const municipality = allowedMunicipalities.has(body.municipality)
-    ? body.municipality
+  const requestedMunicipality = normalizeMunicipality(body.municipality);
+  const municipality = allowedMunicipalities.has(requestedMunicipality)
+    ? requestedMunicipality
     : "";
   const updateToken = randomBytes(18).toString("base64url");
   const updateLink = `${appUrl(request)}/actualizar/${updateToken}`;

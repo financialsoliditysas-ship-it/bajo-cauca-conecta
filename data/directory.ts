@@ -10,10 +10,11 @@ export type DirectoryCategory =
   | "Emprendimientos";
 
 export type DirectoryMunicipality =
+  | "Cáceres"
   | "Nechí"
   | "Caucasia"
   | "Tarazá"
-  | "Bagre"
+  | "El Bagre"
   | "Zaragoza";
 
 export type DirectoryBusiness = {
@@ -34,10 +35,11 @@ export type DirectoryBusiness = {
 };
 
 export const directoryMunicipalities: DirectoryMunicipality[] = [
-  "Nechí",
+  "Cáceres",
   "Caucasia",
+  "El Bagre",
+  "Nechí",
   "Tarazá",
-  "Bagre",
   "Zaragoza"
 ];
 
@@ -109,7 +111,7 @@ export const directoryBusinesses: DirectoryBusiness[] = [
     id: "demo-moda-local",
     name: "Demo Moda Local",
     category: "Moda",
-    municipality: "Bagre",
+    municipality: "El Bagre",
     neighborhood: "Nechí",
     description: "Registro demo para mostrar tiendas de ropa, calzado y accesorios.",
     hours: "Consultar por WhatsApp",

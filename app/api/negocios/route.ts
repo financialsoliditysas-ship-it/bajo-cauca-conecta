@@ -64,6 +64,10 @@ function publicCategory(value: string) {
   return value === "Comida" ? "Comidas y Bebidas" : value;
 }
 
+function publicMunicipality(value: string) {
+  return value === "Bagre" ? "El Bagre" : value;
+}
+
 async function loadAppliedUpdates(config: {
   token: string;
   baseId: string;
@@ -166,7 +170,7 @@ export async function GET() {
         id: record.id,
         name: text(fields, FIELD_IDS.businessName, "Negocio sin nombre"),
         category,
-        municipality: text(fields, FIELD_IDS.municipality, "Nechí"),
+        municipality: publicMunicipality(text(fields, FIELD_IDS.municipality, "Nechí")),
         neighborhood:
           text(appliedUpdate, UPDATE_FIELD_IDS.newNeighborhood) ||
           text(fields, FIELD_IDS.neighborhood, "Nechí"),

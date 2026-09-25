@@ -2,28 +2,69 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
-  DirectoryCategory,
   DirectoryBusiness,
+  DirectoryCategory,
   directoryBusinesses,
   directoryCategories,
   directoryMunicipalities
 } from "@/data/directory";
 
-const categoryInitials: Record<DirectoryCategory, string> = {
-  "Comidas y Bebidas": "CB",
-  Hogar: "Ho",
-  Salud: "Sa",
-  Belleza: "Be",
-  Moda: "Mo",
-  Ferreteria: "Fe",
-  Servicios: "Se",
-  Transporte: "Tr",
-  Emprendimientos: "Em"
+const categoryTheme: Record<DirectoryCategory, { label: string; initials: string; tone: string; terms: string[] }> = {
+  "Comidas y Bebidas": {
+    label: "Comidas y Bebidas",
+    initials: "CB",
+    tone: "from-red-500 to-orange-400",
+    terms: ["comida", "restaurante", "bebida", "licor", "licorera", "almuerzo", "cena", "rapida", "domicilio"]
+  },
+  Hogar: {
+    label: "Hogar",
+    initials: "Ho",
+    tone: "from-emerald-500 to-teal-500",
+    terms: ["hogar", "tienda", "variedades", "casa", "aseo", "mercado"]
+  },
+  Salud: {
+    label: "Salud",
+    initials: "Sa",
+    tone: "from-sky-500 to-cyan-500",
+    terms: ["salud", "drogueria", "farmacia", "medicina", "bienestar"]
+  },
+  Belleza: {
+    label: "Belleza",
+    initials: "Be",
+    tone: "from-pink-500 to-rose-400",
+    terms: ["belleza", "barberia", "peluqueria", "unas", "salon", "estetica"]
+  },
+  Moda: {
+    label: "Moda",
+    initials: "Mo",
+    tone: "from-violet-500 to-fuchsia-500",
+    terms: ["moda", "ropa", "calzado", "tenis", "accesorios"]
+  },
+  Ferreteria: {
+    label: "Ferretería",
+    initials: "Fe",
+    tone: "from-amber-500 to-yellow-500",
+    terms: ["ferreteria", "herramientas", "materiales", "repuestos", "tornillos", "construccion"]
+  },
+  Servicios: {
+    label: "Servicios",
+    initials: "Se",
+    tone: "from-blue-500 to-indigo-500",
+    terms: ["servicio", "servicios", "arreglo", "reparacion", "ventilador", "ventiladores", "tecnico", "mantenimiento", "domicilios"]
+  },
+  Transporte: {
+    label: "Transporte",
+    initials: "Tr",
+    tone: "from-slate-600 to-slate-800",
+    terms: ["transporte", "moto", "taxi", "mensajeria", "domicilio", "domicilios", "envio"]
+  },
+  Emprendimientos: {
+    label: "Emprendimientos",
+    initials: "Em",
+    tone: "from-green-500 to-lime-500",
+    terms: ["emprendimiento", "emprendedor", "marca", "local", "redes"]
+  }
 };
-
-function categoryLabel(category: string) {
-  return category === "Ferreteria" ? "Ferretería" : category;
-}
 
 function normalize(value: string) {
   return value
@@ -32,20 +73,36 @@ function normalize(value: string) {
     .replace(/[\u0300-\u036f]/g, "");
 }
 
+function displayCategory(category: string) {
+  return category === "Ferreteria" ? "Ferretería" : category;
+}
+
+function normalizePhoneForColombia(phone: string) {
+  const digits = String(phone || "").replace(/\D/g, "");
+  if (!digits) return "";
+  if (digits.startsWith("57")) return digits;
+  if (digits.length === 10 && digits.startsWith("3")) return `57${digits}`;
+  return digits;
+}
+
+function phoneForCall(phone: string) {
+  const normalized = normalizePhoneForColombia(phone);
+  return normalized ? `+${normalized}` : "";
+}
+
 function whatsappUrl(phone: string, businessName: string) {
-  const cleaned = phone.replace(/[^\d]/g, "");
+  const normalized = normalizePhoneForColombia(phone);
   const text = encodeURIComponent(
     `Hola, vi ${businessName} en Mercáu y quiero más información.`
   );
 
-  return `https://wa.me/${cleaned}?text=${text}`;
+  return normalized ? `https://wa.me/${normalized}?text=${text}` : "#";
 }
 
 function socialUrl(value: string | undefined, network: "instagram" | "facebook") {
   const clean = String(value || "").trim();
   if (!clean) return "";
   if (/^https?:\/\//i.test(clean)) return clean;
-
   const handle = clean.replace(/^@/, "").replace(/^\/+/, "");
   return network === "instagram"
     ? `https://instagram.com/${handle}`
@@ -63,6 +120,100 @@ function trackMetric(payload: Record<string, string>) {
   }).catch(() => {});
 }
 
+function SearchIcon({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="m21 21-4.2-4.2M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MenuIcon() {
+  return (
+    <svg className="h-7 w-7" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function LocationIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 21s7-5.3 7-11a7 7 0 1 0-14 0c0 5.7 7 11 7 11Z" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function HeartIcon({ filled = false }: { filled?: boolean }) {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} aria-hidden="true">
+      <path d="M20.8 5.9a5.1 5.1 0 0 0-7.2 0L12 7.5l-1.6-1.6a5.1 5.1 0 0 0-7.2 7.2L12 21l8.8-7.9a5.1 5.1 0 0 0 0-7.2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.7 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function WhatsappIcon() {
+  return (
+    <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M20.5 11.7a8.4 8.4 0 0 1-12.4 7.4L3.5 20.5l1.5-4.4a8.4 8.4 0 1 1 15.5-4.4Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8.8 8.6c.2-.4.4-.4.7-.4h.5c.2 0 .4.1.5.4l.7 1.6c.1.3.1.5-.1.7l-.4.5c-.1.2-.2.3 0 .5a6.5 6.5 0 0 0 2.9 2.5c.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.7-.1l1.5.7c.3.1.5.3.5.5 0 .6-.3 1.3-.8 1.6-.5.4-1.6.7-3.7-.2-3.2-1.4-5.3-4.7-5.5-5-.1-.2-.9-1.2-.9-2.2 0-1 .5-1.5.7-1.7Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function StoreIcon() {
+  return (
+    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M4 10h16l-1.2-5H5.2L4 10ZM6 10v9h12v-9M9 19v-5h6v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function BottomNav() {
+  return (
+    <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 px-4 py-2 shadow-[0_-10px_30px_rgba(15,23,42,0.08)] backdrop-blur md:hidden" aria-label="Navegación principal">
+      <div className="mx-auto grid max-w-md grid-cols-4 gap-1 text-xs font-bold text-slate-500">
+        <a href="#" className="grid min-h-12 place-items-center rounded-xl text-red-600">
+          <StoreIcon />
+          Inicio
+        </a>
+        <a href="#directorio" className="grid min-h-12 place-items-center rounded-xl">
+          <SearchIcon className="h-5 w-5" />
+          Buscar
+        </a>
+        <a href="#directorio" className="grid min-h-12 place-items-center rounded-xl">
+          <HeartIcon />
+          Favoritos
+        </a>
+        <a href="#inscripcion" className="grid min-h-12 place-items-center rounded-xl">
+          <MenuIcon />
+          Mi cuenta
+        </a>
+      </div>
+    </nav>
+  );
+}
+
+function BusinessVisual({ business, compact = false }: { business: DirectoryBusiness; compact?: boolean }) {
+  const theme = categoryTheme[business.category] || categoryTheme.Servicios;
+
+  return (
+    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl bg-gradient-to-br ${theme.tone} text-white ${compact ? "h-24 w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
+      <span className="absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(255,255,255,0.35),transparent_32%)]" />
+      <span className="relative text-2xl font-black">{theme.initials}</span>
+    </div>
+  );
+}
+
 function BusinessCard({
   business,
   onOpen
@@ -70,67 +221,49 @@ function BusinessCard({
   business: DirectoryBusiness;
   onOpen: (business: DirectoryBusiness) => void;
 }) {
-  const visiblePhone = business.whatsapp.replace(/[^\d+]/g, "");
+  const callPhone = phoneForCall(business.whatsapp);
+  const hasWhatsapp = Boolean(normalizePhoneForColombia(business.whatsapp));
+  const isFeatured = business.status === "Destacado";
 
   return (
-    <article className="flex min-h-full flex-col gap-3 rounded-lg border border-slate-200 bg-white p-4 shadow-soft transition hover:-translate-y-0.5 hover:border-emerald-300 sm:p-5">
-      <div className="flex flex-wrap items-center gap-2 text-xs font-extrabold">
-        <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
-          {categoryLabel(business.category)}
-        </span>
-        <span
-          className={`rounded-full px-3 py-1 ${
-            business.status === "Destacado"
-              ? "bg-amber-200 text-amber-950"
-              : "bg-emerald-100 text-emerald-900"
-          }`}
-        >
-          {business.status}
-        </span>
-        {business.source.toLowerCase().includes("demo") ? (
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-slate-700">
-            Demo
-          </span>
-        ) : null}
-      </div>
+    <article className="rounded-3xl border border-slate-200 bg-white p-3 shadow-soft transition hover:-translate-y-0.5 hover:border-red-200">
+      <div className="flex gap-3">
+        <button type="button" onClick={() => onOpen(business)} className="text-left" aria-label={`Ver ficha de ${business.name}`}>
+          <BusinessVisual business={business} compact />
+        </button>
 
-      <div>
-        <h3 className="text-xl font-black leading-tight sm:text-2xl">{business.name}</h3>
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-slate-600 sm:text-base">
-          {business.description}
-        </p>
-      </div>
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start gap-2">
+            <button type="button" onClick={() => onOpen(business)} className="min-w-0 flex-1 text-left">
+              <h3 className="truncate text-base font-black leading-tight text-slate-950 md:text-lg">{business.name}</h3>
+            </button>
+            <button type="button" className="grid h-9 w-9 shrink-0 place-items-center rounded-full text-slate-400 hover:bg-red-50 hover:text-red-600" aria-label="Guardar negocio">
+              <HeartIcon />
+            </button>
+          </div>
 
-      <div className="grid gap-1.5 rounded-lg bg-slate-50 p-3 text-sm text-slate-700">
-        <div className="flex justify-between gap-4">
-          <span className="font-bold text-slate-900">Municipio</span>
-          <span className="text-right">{business.municipality}</span>
-        </div>
-        <div className="flex justify-between gap-4">
-          <span className="font-bold text-slate-900">Barrio/vereda</span>
-          <span className="text-right">{business.neighborhood}</span>
-        </div>
-        <div className="flex justify-between gap-4">
-          <span className="font-bold text-slate-900">Horario</span>
-          <span className="text-right">{business.hours}</span>
-        </div>
-        <div className="flex justify-between gap-4">
-          <span className="font-bold text-slate-900">Domicilios</span>
-          <span className="text-right">
-            {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}
-          </span>
-        </div>
-        <div className="flex justify-between gap-4">
-          <span className="font-bold text-slate-900">Contacto</span>
-          <span className="text-right">{visiblePhone || "Consultar"}</span>
+          <p className="mt-1 text-sm font-semibold text-slate-700">{displayCategory(business.category)}</p>
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-slate-500">
+            <span className="inline-flex items-center gap-1">
+              <LocationIcon className="h-3.5 w-3.5" />
+              {business.municipality}
+            </span>
+            {business.neighborhood ? <span>{business.neighborhood}</span> : null}
+          </div>
+          {isFeatured ? (
+            <span className="mt-2 inline-flex rounded-full bg-amber-100 px-2.5 py-1 text-xs font-black text-amber-800">
+              Destacado
+            </span>
+          ) : null}
         </div>
       </div>
 
-      <div className="mt-auto grid gap-2">
+      <div className="mt-3 grid grid-cols-[1fr_auto] gap-2">
         <a
           href={whatsappUrl(business.whatsapp, business.name)}
           target="_blank"
           rel="noreferrer"
+          aria-disabled={!hasWhatsapp}
           onClick={() =>
             trackMetric({
               type: "Clic WhatsApp",
@@ -139,55 +272,19 @@ function BusinessCard({
               category: business.category
             })
           }
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-amber-300 px-4 text-center font-extrabold text-emerald-950"
+          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-black text-white ${hasWhatsapp ? "bg-emerald-700 hover:bg-emerald-800" : "pointer-events-none bg-slate-300"}`}
         >
-          Contactar por WhatsApp
+          <WhatsappIcon />
+          WhatsApp
         </a>
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => onOpen(business)}
-            className="inline-flex min-h-10 items-center justify-center rounded-lg bg-emerald-950 px-3 text-sm font-extrabold text-white"
-          >
-            Ver ficha
-          </button>
-          <a
-            href={`tel:${business.whatsapp}`}
-            className="inline-flex min-h-10 items-center justify-center rounded-lg bg-emerald-100 px-3 text-sm font-extrabold text-emerald-950"
-          >
-            Llamar
-          </a>
-          {business.mapsUrl ? (
-            <a
-              href={business.mapsUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-extrabold text-slate-900"
-            >
-              Ubicación
-            </a>
-          ) : null}
-          {business.instagram ? (
-            <a
-              href={socialUrl(business.instagram, "instagram")}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-extrabold text-slate-900"
-            >
-              Instagram
-            </a>
-          ) : null}
-          {business.facebook ? (
-            <a
-              href={socialUrl(business.facebook, "facebook")}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex min-h-10 items-center justify-center rounded-lg bg-slate-100 px-3 text-sm font-extrabold text-slate-900"
-            >
-              Facebook
-            </a>
-          ) : null}
-        </div>
+        <a
+          href={callPhone ? `tel:${callPhone}` : "#"}
+          aria-disabled={!callPhone}
+          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 text-sm font-black ${callPhone ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "pointer-events-none bg-slate-100 text-slate-400"}`}
+        >
+          <PhoneIcon />
+          <span className="hidden sm:inline">Llamar</span>
+        </a>
       </div>
     </article>
   );
@@ -200,81 +297,133 @@ function BusinessDetailModal({
   business: DirectoryBusiness;
   onClose: () => void;
 }) {
-  const visiblePhone = business.whatsapp.replace(/[^\d+]/g, "");
+  const callPhone = phoneForCall(business.whatsapp);
+  const shareText = `Mira ${business.name} en Mercáu: https://www.mercau.co`;
+
+  async function shareBusiness() {
+    if (navigator.share) {
+      await navigator.share({ title: business.name, text: shareText, url: "https://www.mercau.co" });
+      return;
+    }
+    await navigator.clipboard?.writeText(shareText);
+  }
 
   return (
-    <div className="fixed inset-0 z-[80] grid place-items-end bg-emerald-950/70 p-0 sm:place-items-center sm:p-6">
-      <div className="max-h-[92vh] w-full overflow-y-auto rounded-t-lg bg-white p-5 shadow-soft sm:max-w-2xl sm:rounded-lg sm:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <div className="flex flex-wrap gap-2 text-xs font-extrabold">
-              <span className="rounded-full bg-emerald-100 px-3 py-1 text-emerald-900">
-                {categoryLabel(business.category)}
-              </span>
-              <span className="rounded-full bg-amber-200 px-3 py-1 text-amber-950">
-                {business.status}
-              </span>
-            </div>
-            <h2 className="mt-4 text-3xl font-black leading-tight text-emerald-950">
-              {business.name}
-            </h2>
+    <div className="fixed inset-0 z-[80] grid place-items-end bg-slate-950/60 p-0 md:place-items-center md:p-6">
+      <div className="max-h-[94vh] w-full overflow-y-auto rounded-t-[2rem] bg-white shadow-soft md:max-w-2xl md:rounded-[2rem]">
+        <div className="relative">
+          <BusinessVisual business={business} />
+          <div className="absolute left-4 top-4 flex gap-2">
+            <button type="button" onClick={onClose} className="grid h-10 w-10 place-items-center rounded-full bg-white/95 font-black text-slate-900 shadow-soft" aria-label="Cerrar">
+              <span aria-hidden="true">X</span>
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 font-black text-slate-700"
-            aria-label="Cerrar ficha"
-          >
-            X
-          </button>
         </div>
 
-        <p className="mt-5 leading-8 text-slate-700">{business.description}</p>
+        <div className="p-5 md:p-7">
+          <div className="flex items-start gap-3">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-2xl font-black leading-tight text-slate-950 md:text-3xl">{business.name}</h2>
+              <p className="mt-1 font-bold text-slate-700">{displayCategory(business.category)}</p>
+              <p className="mt-1 inline-flex items-center gap-1 text-sm font-semibold text-slate-500">
+                <LocationIcon className="h-4 w-4" />
+                {business.municipality}
+                {business.neighborhood ? ` · ${business.neighborhood}` : ""}
+              </p>
+            </div>
+            <button type="button" className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-50 text-red-600" aria-label="Guardar negocio">
+              <HeartIcon />
+            </button>
+          </div>
 
-        <div className="mt-6 grid gap-3 rounded-lg bg-slate-50 p-4 text-sm text-slate-700 sm:grid-cols-2">
-          <p><strong className="text-slate-950">Municipio:</strong> {business.municipality}</p>
-          <p><strong className="text-slate-950">Barrio/vereda:</strong> {business.neighborhood}</p>
-          <p><strong className="text-slate-950">Horario:</strong> {business.hours}</p>
-          <p><strong className="text-slate-950">Domicilios:</strong> {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}</p>
-          <p><strong className="text-slate-950">WhatsApp:</strong> {visiblePhone || "Consultar"}</p>
-          <p><strong className="text-slate-950">Instagram:</strong> {business.instagram || "No registrado"}</p>
-          <p><strong className="text-slate-950">Facebook:</strong> {business.facebook || "No registrado"}</p>
-        </div>
-
-        <div className="mt-6 grid gap-2 sm:grid-cols-2">
-          <a
-            href={whatsappUrl(business.whatsapp, business.name)}
-            target="_blank"
-            rel="noreferrer"
-            onClick={() =>
-              trackMetric({
-                type: "Clic WhatsApp",
-                businessId: business.id,
-                businessName: business.name,
-                category: business.category
-              })
-            }
-            className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-300 px-4 text-center font-extrabold text-emerald-950"
-          >
-            Contactar por WhatsApp
-          </a>
-          <a
-            href={`tel:${business.whatsapp}`}
-            className="inline-flex min-h-12 items-center justify-center rounded-lg bg-emerald-100 px-4 font-extrabold text-emerald-950"
-          >
-            Llamar
-          </a>
-          {business.mapsUrl ? (
+          <div className="mt-5 grid grid-cols-[1fr_auto] gap-2">
             <a
-              href={business.mapsUrl}
+              href={whatsappUrl(business.whatsapp, business.name)}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex min-h-12 items-center justify-center rounded-lg bg-slate-100 px-4 font-extrabold text-slate-900"
+              onClick={() =>
+                trackMetric({
+                  type: "Clic WhatsApp",
+                  businessId: business.id,
+                  businessName: business.name,
+                  category: business.category
+                })
+              }
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 text-sm font-black text-white hover:bg-emerald-800"
             >
-              Abrir ubicación
+              <WhatsappIcon />
+              WhatsApp
             </a>
-          ) : null}
+            <a href={callPhone ? `tel:${callPhone}` : "#"} className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-slate-100 px-4 text-sm font-black text-slate-900">
+              <PhoneIcon />
+              Llamar
+            </a>
+          </div>
+          <button type="button" onClick={shareBusiness} className="mt-2 inline-flex min-h-11 w-full items-center justify-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-black text-slate-900">
+            Compartir
+          </button>
+
+          <section className="mt-6">
+            <h3 className="text-lg font-black text-slate-950">Qué ofrece</h3>
+            <p className="mt-2 leading-7 text-slate-700">{business.description}</p>
+          </section>
+
+          <section className="mt-6 grid gap-3 rounded-2xl bg-slate-50 p-4 text-sm text-slate-700">
+            <h3 className="text-lg font-black text-slate-950">Dónde atiende</h3>
+            <p><strong>Municipio:</strong> {business.municipality}</p>
+            <p><strong>Zona:</strong> {business.neighborhood || "Consultar"}</p>
+            <p><strong>Domicilios:</strong> {business.deliveries === "Si" ? "Sí" : business.deliveries || "Consultar"}</p>
+            <p><strong>Horario:</strong> {business.hours || "Consultar por WhatsApp"}</p>
+          </section>
+
+          <section className="mt-6 grid gap-2">
+            <h3 className="text-lg font-black text-slate-950">Información del negocio</h3>
+            {business.mapsUrl ? <a className="font-bold text-emerald-700 underline" href={business.mapsUrl} target="_blank" rel="noreferrer">Abrir ubicación</a> : null}
+            {business.instagram ? <a className="font-bold text-emerald-700 underline" href={socialUrl(business.instagram, "instagram")} target="_blank" rel="noreferrer">Instagram</a> : null}
+            {business.facebook ? <a className="font-bold text-emerald-700 underline" href={socialUrl(business.facebook, "facebook")} target="_blank" rel="noreferrer">Facebook</a> : null}
+          </section>
+
+          <a href="#inscripcion" onClick={onClose} className="mt-6 inline-flex w-full justify-center text-sm font-black text-red-600">
+            Reportar datos incorrectos
+          </a>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function EmptyState({
+  query,
+  municipality,
+  onClearMunicipality,
+  onClearSearch
+}: {
+  query: string;
+  municipality: string;
+  onClearMunicipality: () => void;
+  onClearSearch: () => void;
+}) {
+  return (
+    <div className="rounded-[2rem] border border-slate-200 bg-white p-6 text-center shadow-soft">
+      <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-slate-100 text-slate-500">
+        <SearchIcon className="h-10 w-10" />
+      </div>
+      <h3 className="mt-5 text-2xl font-black text-slate-950">Aún no tenemos resultados aquí</h3>
+      <p className="mx-auto mt-2 max-w-md leading-7 text-slate-600">
+        No encontramos negocios que coincidan con
+        {query ? ` "${query}"` : " esta búsqueda"}
+        {municipality ? ` en ${municipality}` : ""}. Puedes probar con otra opción o ayudarnos a sumar ese negocio.
+      </p>
+      <div className="mt-5 grid gap-2 sm:grid-cols-3">
+        <button type="button" onClick={onClearMunicipality} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-emerald-700 px-4 font-black text-emerald-800">
+          Buscar en otro municipio
+        </button>
+        <button type="button" onClick={onClearSearch} className="inline-flex min-h-12 items-center justify-center rounded-xl border border-slate-200 px-4 font-black text-slate-900">
+          Cambiar búsqueda
+        </button>
+        <a href="#inscripcion" className="inline-flex min-h-12 items-center justify-center rounded-xl bg-red-600 px-4 font-black text-white">
+          Inscribir mi negocio gratis
+        </a>
       </div>
     </div>
   );
@@ -287,12 +436,9 @@ export default function MercauDirectory() {
   const [status, setStatus] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDirectoryLoading, setIsDirectoryLoading] = useState(true);
-  const [selectedBusiness, setSelectedBusiness] =
-    useState<DirectoryBusiness | null>(null);
+  const [selectedBusiness, setSelectedBusiness] = useState<DirectoryBusiness | null>(null);
   const [businesses, setBusinesses] = useState<DirectoryBusiness[]>([]);
-  const [directoryStatus, setDirectoryStatus] = useState(
-    "Cargando negocios aprobados..."
-  );
+  const [directoryStatus, setDirectoryStatus] = useState("Cargando negocios aprobados...");
 
   async function loadBusinesses() {
     setIsDirectoryLoading(true);
@@ -307,16 +453,12 @@ export default function MercauDirectory() {
 
       if (Array.isArray(result.businesses) && result.businesses.length > 0) {
         setBusinesses(result.businesses);
-        setDirectoryStatus(
-          "Mostrando negocios aprobados desde Airtable."
-        );
+        setDirectoryStatus("Negocios aprobados para publicarse en Mercáu.");
         return;
       }
 
       setBusinesses([]);
-      setDirectoryStatus(
-        "Todavía no hay negocios aprobados para mostrar."
-      );
+      setDirectoryStatus("Todavía no hay negocios aprobados para mostrar.");
     } catch (error) {
       setBusinesses(
         process.env.NEXT_PUBLIC_ALLOW_DEMO_DATA === "true"
@@ -357,38 +499,32 @@ export default function MercauDirectory() {
     const term = normalize(query);
 
     return businesses.filter((business) => {
-      const categoryMatches = activeCategory
-        ? business.category === activeCategory
-        : true;
-      const municipalityMatches = activeMunicipality
-        ? business.municipality === activeMunicipality
-        : true;
+      const categoryMatches = activeCategory ? business.category === activeCategory : true;
+      const municipalityMatches = activeMunicipality ? business.municipality === activeMunicipality : true;
+      const categoryTerms = categoryTheme[business.category]?.terms || [];
       const searchable = normalize(
         [
           business.name,
-          business.category,
+          displayCategory(business.category),
           business.municipality,
           business.neighborhood,
           business.description,
-          business.status
+          business.deliveries,
+          ...categoryTerms
         ].join(" ")
       );
 
-      return (
-        categoryMatches &&
-        municipalityMatches &&
-        (!term || searchable.includes(term))
-      );
+      return categoryMatches && municipalityMatches && (!term || searchable.includes(term));
     });
   }, [activeCategory, activeMunicipality, businesses, query]);
 
-  const featuredBusinesses = useMemo(
-    () => filteredBusinesses.filter((business) => business.status === "Destacado"),
-    [filteredBusinesses]
-  );
-
-  const regularBusinesses = useMemo(
-    () => filteredBusinesses.filter((business) => business.status !== "Destacado"),
+  const sortedBusinesses = useMemo(
+    () =>
+      [...filteredBusinesses].sort((a, b) => {
+        if (a.status === "Destacado" && b.status !== "Destacado") return -1;
+        if (a.status !== "Destacado" && b.status === "Destacado") return 1;
+        return a.name.localeCompare(b.name);
+      }),
     [filteredBusinesses]
   );
 
@@ -413,7 +549,7 @@ export default function MercauDirectory() {
       }
 
       form.reset();
-      setStatus("Inscripción recibida. Queda pendiente de revisión.");
+      setStatus("Inscripción recibida. Queda pendiente de revisión antes de publicarse.");
       trackMetric({
         type: "Inscripcion enviada",
         businessName: String(payload.businessName || ""),
@@ -421,363 +557,346 @@ export default function MercauDirectory() {
       });
       loadBusinesses();
     } catch (error) {
-      setStatus(
-        "No se pudo conectar con Airtable en este entorno. Revisa las variables de Vercel."
-      );
+      setStatus("No se pudo enviar la inscripción. Revisa la conexión e intenta nuevamente.");
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const resultsLabel = isDirectoryLoading
+    ? "Cargando resultados"
+    : `${sortedBusinesses.length} ${sortedBusinesses.length === 1 ? "resultado" : "resultados"}`;
+
   return (
     <>
-      <section className="bg-emerald-950 text-white">
-        <div className="container grid min-h-[calc(100vh-68px)] gap-10 py-16 md:grid-cols-[1.15fr_0.85fr] md:items-end md:py-24">
-          <div>
-            <img
-              src="/logo-mercau.png"
-              alt="Mercáu"
-              className="h-28 w-28 rounded-2xl object-cover shadow-soft sm:h-36 sm:w-36"
-            />
-            <h1 className="mt-5 text-6xl font-black leading-none sm:text-7xl md:text-8xl">
-              Mercáu
-            </h1>
-            <p className="mt-5 text-3xl font-black leading-tight sm:text-4xl">
-              Directorio Digital del Bajo Cauca
-            </p>
-            <p className="mt-5 max-w-2xl text-lg leading-8 text-emerald-50/85">
-              Encuentra negocios locales por categoría, contacta por WhatsApp y
-              ayuda a construir la vitrina comercial del municipio.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href="#inscripcion"
-                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-amber-300 px-5 font-extrabold text-emerald-950"
-              >
-                Inscribir mi negocio
-              </a>
-              <a
-                href="#directorio"
-                className="inline-flex min-h-12 items-center justify-center rounded-lg bg-white px-5 font-extrabold text-emerald-950"
-              >
-                Explorar directorio
-              </a>
-            </div>
-          </div>
-
-          <div className="grid gap-3">
-            {[
-              ["9", "Categorías"],
-              ["2 min", "Registro"],
-              ["WhatsApp", "Contacto directo"]
-            ].map(([value, label]) => (
-              <div
-                key={label}
-                className="rounded-lg border border-white/25 bg-white/10 p-5"
-              >
-                <strong className="block text-2xl">{value}</strong>
-                <span className="mt-1 block text-white/75">{label}</span>
+      <div className="min-h-screen bg-[#fbfaf6] pb-24 md:pb-0">
+        <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 md:px-6">
+            <a href="#" className="flex items-center gap-3" aria-label="Inicio Mercáu">
+              <img src="/logo-mercau.png" alt="Mercáu" className="h-14 w-14 rounded-2xl object-cover md:h-12 md:w-12" />
+              <div>
+                <strong className="block text-3xl font-black leading-none text-red-600 md:text-2xl">Mercáu</strong>
+                <span className="text-xs font-semibold text-slate-500 md:text-sm">Directorio Digital del Bajo Cauca</span>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="bg-[#fbfaf6] py-16 md:py-20">
-        <div className="container">
-          <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-            Buscar por categoría
-          </p>
-          <h2 className="mt-2 max-w-3xl text-3xl font-black leading-tight md:text-5xl">
-            Lo que la gente necesita, organizado
-          </h2>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {directoryCategories.map((category) => (
-              <button
-                key={category.name}
-                type="button"
-                onClick={() => {
-                  setActiveCategory((current) =>
-                    current === category.name ? "" : category.name
-                  );
-                  trackMetric({
-                    type: "Categoria",
-                    category: category.name,
-                    search: query
-                  });
-                }}
-                className={`flex min-h-28 items-center gap-4 rounded-lg border bg-white p-5 text-left shadow-soft transition ${
-                  activeCategory === category.name
-                    ? "border-emerald-700 ring-4 ring-emerald-700/10"
-                    : "border-slate-200 hover:border-emerald-700"
-                }`}
-              >
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-lg bg-emerald-100 font-black text-emerald-900">
-                  {categoryInitials[category.name]}
-                </span>
-                <span>
-                  <strong className="block">{categoryLabel(category.name)}</strong>
-                  <span className="mt-1 block text-sm leading-5 text-slate-600">
-                    {category.hint}
-                  </span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="directorio" className="bg-emerald-50 py-16 md:py-20">
-        <div className="container">
-          <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-            Directorio
-          </p>
-          <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
-            Negocios visibles en el Bajo Cauca
-          </h2>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <label className="grid flex-1 basis-80 gap-2 font-bold">
-              Buscar
-              <input
-                value={query}
-                onChange={(event) => setQuery(event.target.value)}
-                className="rounded-lg border border-slate-200 px-4 py-3 font-normal"
-                type="search"
-                placeholder="Comidas, bebidas, ferretería, domicilio..."
-              />
-            </label>
-            <button
-              type="button"
-              onClick={() => {
-                setActiveCategory("");
-                setActiveMunicipality("");
-                setQuery("");
-              }}
-              className="mt-auto inline-flex min-h-12 items-center rounded-lg bg-emerald-100 px-5 font-extrabold text-emerald-950"
-            >
-              Limpiar
+            </a>
+            <nav className="hidden items-center gap-2 text-sm font-black text-slate-700 md:flex">
+              <a href="#directorio" className="rounded-xl px-4 py-2 hover:bg-slate-100">Explorar</a>
+              <a href="#inscripcion" className="rounded-xl bg-emerald-700 px-4 py-2 text-white hover:bg-emerald-800">Inscribir mi negocio</a>
+              <a href="#directorio" className="grid h-10 w-10 place-items-center rounded-full hover:bg-red-50 hover:text-red-600" aria-label="Favoritos"><HeartIcon /></a>
+              <a href="#inscripcion" className="rounded-xl border border-slate-200 px-4 py-2 hover:bg-slate-100">Mi cuenta</a>
+            </nav>
+            <button type="button" className="grid h-11 w-11 place-items-center rounded-full bg-slate-100 text-slate-700 md:hidden" aria-label="Abrir menú">
+              <MenuIcon />
             </button>
           </div>
-          <p className="mt-4 max-w-3xl leading-7 text-slate-600">
-            {directoryStatus}
-          </p>
+        </header>
 
-          <div className="mt-6">
-            <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-              Filtrar por municipio
-            </p>
-            <div className="mt-3 flex gap-2 overflow-x-auto pb-2">
-              <button
-                type="button"
-                onClick={() => setActiveMunicipality("")}
-                className={`shrink-0 rounded-full px-4 py-2 text-sm font-extrabold ${
-                  activeMunicipality === ""
-                    ? "bg-emerald-950 text-white"
-                    : "bg-white text-emerald-950"
-                }`}
-              >
-                Todos
-              </button>
-              {directoryMunicipalities.map((municipality) => (
-                <button
-                  key={municipality}
-                  type="button"
-                  onClick={() =>
-                    setActiveMunicipality((current) =>
-                      current === municipality ? "" : municipality
-                    )
-                  }
-                  className={`shrink-0 rounded-full px-4 py-2 text-sm font-extrabold ${
-                    activeMunicipality === municipality
-                      ? "bg-emerald-950 text-white"
-                      : "bg-white text-emerald-950"
-                  }`}
-                >
-                  {municipality}
-                </button>
-              ))}
+        <section className="mx-auto grid max-w-7xl gap-0 px-4 pb-5 pt-4 md:grid-cols-[1fr_0.9fr] md:items-center md:gap-6 md:px-6 md:py-8">
+          <div className="overflow-hidden rounded-[2rem] md:order-2">
+            <div className="relative h-44 overflow-hidden rounded-[2rem] md:h-[25rem]">
+              <img src="/bajo-cauca-hero.png" alt="Paisaje visual del Bajo Cauca" className="h-full w-full object-cover" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-white">
+                <p className="text-sm font-black uppercase tracking-normal text-white/85 md:text-base">Negocios locales, más cerca de ti</p>
+                <h1 className="mt-1 max-w-sm text-3xl font-black leading-tight md:text-5xl">
+                  Encuentra negocios cerca de ti
+                </h1>
+                <p className="mt-1 max-w-sm text-sm font-semibold text-white/90 md:text-base">
+                  Compra local. Apoya nuestra gente.
+                </p>
+              </div>
             </div>
           </div>
 
-          {!isDirectoryLoading && featuredBusinesses.length > 0 ? (
-            <section className="mt-8">
-              <div className="flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className="text-sm font-extrabold uppercase tracking-normal text-amber-700">
-                    Destacados
-                  </p>
-                  <h3 className="mt-1 text-2xl font-black text-emerald-950">
-                    Negocios recomendados
-                  </h3>
-                </div>
-                <span className="rounded-full bg-amber-200 px-3 py-1 text-sm font-black text-amber-950">
-                  {featuredBusinesses.length} visibles
-                </span>
-              </div>
-              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {featuredBusinesses.map((business) => (
-                  <BusinessCard
-                    key={`featured-${business.id}`}
-                    business={business}
-                    onOpen={setSelectedBusiness}
-                  />
-                ))}
-              </div>
-            </section>
-          ) : null}
+          <div className="relative z-10 -mt-7 md:order-1 md:mt-0">
+            <div className="rounded-[2rem] border border-slate-200 bg-white p-4 shadow-soft md:p-5">
+              <label className="relative block">
+                <span className="sr-only">Buscar negocio o servicio</span>
+                <SearchIcon className="absolute left-4 top-1/2 h-6 w-6 -translate-y-1/2 text-slate-400" />
+                <input
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  type="search"
+                  placeholder="¿Qué estás buscando hoy?"
+                  className="h-14 w-full rounded-2xl border border-slate-200 bg-white pl-12 pr-4 text-base font-semibold outline-none ring-red-600/20 placeholder:text-slate-400 focus:border-red-500 focus:ring-4"
+                />
+              </label>
 
-          {!isDirectoryLoading &&
-          (regularBusinesses.length > 0 || featuredBusinesses.length === 0) ? (
-            <section className={featuredBusinesses.length > 0 ? "mt-12" : "mt-8"}>
-              <div className="flex flex-wrap items-end justify-between gap-3">
-                <div>
-                  <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-                    Directorio
-                  </p>
-                  <h3 className="mt-1 text-2xl font-black text-emerald-950">
-                    {featuredBusinesses.length > 0 ? "Otros negocios" : "Negocios disponibles"}
-                  </h3>
+              <div className="mt-4">
+                <p className="text-sm font-black text-slate-950">Filtra por municipio</p>
+                <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
+                  {directoryMunicipalities.map((municipality) => (
+                    <button
+                      key={municipality}
+                      type="button"
+                      onClick={() => setActiveMunicipality((current) => (current === municipality ? "" : municipality))}
+                      className={`min-h-11 shrink-0 rounded-full px-4 text-sm font-black transition ${
+                        activeMunicipality === municipality
+                          ? "bg-emerald-700 text-white"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {municipality}
+                    </button>
+                  ))}
                 </div>
-                <span className="rounded-full bg-emerald-100 px-3 py-1 text-sm font-black text-emerald-900">
-                  {regularBusinesses.length} resultados
-                </span>
               </div>
-              <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {regularBusinesses.map((business) => (
-                  <BusinessCard
-                    key={business.id}
-                    business={business}
-                    onOpen={setSelectedBusiness}
-                  />
-                ))}
+
+              <div className="mt-4 grid gap-2 sm:grid-cols-[1fr_auto]">
+                <a href="#directorio" className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-red-600 px-5 font-black text-white hover:bg-red-700">
+                  Explorar directorio
+                </a>
+                <a href="#inscripcion" className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-emerald-700 px-5 font-black text-white hover:bg-emerald-800">
+                  <StoreIcon />
+                  Inscribir mi negocio gratis
+                </a>
               </div>
-            </section>
-          ) : null}
-          {!isDirectoryLoading && filteredBusinesses.length === 0 ? (
-            <div className="mt-8 rounded-lg border border-emerald-200 bg-white p-5 text-slate-700">
-              No encontramos negocios con ese filtro.
             </div>
-          ) : null}
-        </div>
-      </section>
-
-      <section id="inscripcion" className="bg-[#fbfaf6] py-16 md:py-20">
-        <div className="container grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <p className="text-sm font-extrabold uppercase tracking-normal text-emerald-700">
-              Inscripción gratuita
-            </p>
-            <h2 className="mt-2 text-3xl font-black leading-tight md:text-5xl">
-              Agrega tu negocio al Directorio Digital del Bajo Cauca
-            </h2>
-            <p className="mt-5 max-w-xl leading-8 text-slate-600">
-              Tu solicitud queda como pendiente para revisión. Cuando sea
-              validada, el negocio puede mostrarse en el directorio y luego
-              pasar a vender en Mercáu.
-            </p>
           </div>
+        </section>
 
-          <form
-            onSubmit={onSubmit}
-            className="grid gap-4 rounded-lg border border-slate-200 bg-white p-5 shadow-soft sm:grid-cols-2"
-          >
-            <label className="grid gap-2 font-bold">
-              Nombre del negocio
-              <input name="businessName" required className="rounded-lg border px-4 py-3 font-normal" />
-            </label>
-            <label className="grid gap-2 font-bold">
-              Propietario o contacto
-              <input name="ownerName" required className="rounded-lg border px-4 py-3 font-normal" />
-            </label>
-            <label className="grid gap-2 font-bold">
-              WhatsApp
-              <input name="whatsapp" required inputMode="tel" className="rounded-lg border px-4 py-3 font-normal" />
-            </label>
-            <label className="grid gap-2 font-bold">
-              Categoría
-              <select name="category" required className="rounded-lg border px-4 py-3 font-normal">
-                <option value="">Seleccionar categoría</option>
-                {directoryCategories.map((category) => (
-                  <option key={category.name} value={category.name}>
-                    {categoryLabel(category.name)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="grid gap-2 font-bold">
-              Municipio
-              <select name="municipality" required className="rounded-lg border px-4 py-3 font-normal">
-                <option value="">Seleccionar municipio</option>
+        <section className="mx-auto max-w-7xl px-4 md:px-6">
+          <div className="rounded-[2rem] bg-white p-4 shadow-soft md:p-5">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-xl font-black text-slate-950">Categorías principales</h2>
+              <button type="button" onClick={() => setActiveCategory("")} className="text-sm font-black text-emerald-700 underline">Ver todas</button>
+            </div>
+            <div className="mt-4 flex gap-3 overflow-x-auto pb-1 md:grid md:grid-cols-9 md:overflow-visible">
+              {directoryCategories.map((category) => {
+                const theme = categoryTheme[category.name];
+                return (
+                  <button
+                    key={category.name}
+                    type="button"
+                    onClick={() => {
+                      setActiveCategory((current) => (current === category.name ? "" : category.name));
+                      trackMetric({ type: "Categoria", category: category.name, search: query });
+                    }}
+                    className={`grid min-h-28 w-28 shrink-0 place-items-center rounded-2xl border p-3 text-center transition md:w-auto ${
+                      activeCategory === category.name
+                        ? "border-red-500 bg-red-50 ring-4 ring-red-600/10"
+                        : "border-slate-200 bg-white hover:border-red-200"
+                    }`}
+                  >
+                    <span className={`grid h-12 w-12 place-items-center rounded-full bg-gradient-to-br ${theme.tone} text-sm font-black text-white`}>
+                      {theme.initials}
+                    </span>
+                    <span className="mt-2 text-sm font-black leading-tight text-slate-950">{theme.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        <section id="directorio" className="mx-auto mt-6 grid max-w-7xl gap-5 px-4 md:grid-cols-[18rem_1fr] md:px-6">
+          <aside className="hidden self-start rounded-[2rem] bg-white p-5 shadow-soft md:block">
+            <h2 className="text-lg font-black text-slate-950">Filtros</h2>
+            <div className="mt-5">
+              <p className="text-sm font-black text-slate-700">Municipio</p>
+              <div className="mt-2 grid gap-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <input type="radio" checked={activeMunicipality === ""} onChange={() => setActiveMunicipality("")} />
+                  Todos
+                </label>
                 {directoryMunicipalities.map((municipality) => (
-                  <option key={municipality} value={municipality}>
+                  <label key={municipality} className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <input type="radio" checked={activeMunicipality === municipality} onChange={() => setActiveMunicipality(municipality)} />
                     {municipality}
-                  </option>
+                  </label>
                 ))}
-              </select>
-            </label>
-            <label className="grid gap-2 font-bold">
-              Barrio o vereda
-              <input name="neighborhood" className="rounded-lg border px-4 py-3 font-normal" />
-            </label>
-            <label className="grid gap-2 font-bold">
-              Horario
-              <input name="hours" className="rounded-lg border px-4 py-3 font-normal" />
-            </label>
-            <label className="grid gap-2 font-bold sm:col-span-2">
-              Descripción corta
-              <textarea name="description" required rows={4} className="rounded-lg border px-4 py-3 font-normal" />
-            </label>
-            <label className="grid gap-2 font-bold">
-              Domicilios
-              <select name="deliveries" className="rounded-lg border px-4 py-3 font-normal">
-                <option>Consultar</option>
-                <option value="Si">Sí</option>
-                <option>No</option>
-              </select>
-            </label>
-            <label className="grid gap-2 font-bold">
-              Quiere vender en Mercáu
-              <select name="wantsMarketplace" className="rounded-lg border px-4 py-3 font-normal">
-                <option>Después</option>
-                <option value="Si">Sí</option>
-              </select>
-            </label>
-            <label className="grid gap-2 font-bold">
-              Instagram o usuario
-              <input
-                name="instagram"
-                type="text"
-                placeholder="@minegocio o instagram.com/minegocio"
-                className="rounded-lg border px-4 py-3 font-normal"
-              />
-            </label>
-            <label className="grid gap-2 font-bold">
-              Facebook o nombre de la página
-              <input
-                name="facebook"
-                type="text"
-                placeholder="Mi Negocio Nechí o facebook.com/minegocio"
-                className="rounded-lg border px-4 py-3 font-normal"
-              />
-            </label>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="inline-flex min-h-12 items-center justify-center rounded-lg bg-emerald-700 px-5 font-extrabold text-white disabled:opacity-60 sm:col-span-2"
-            >
-              {isSubmitting ? "Enviando..." : "Enviar inscripción"}
-            </button>
-            {status ? (
-              <p className="font-bold text-emerald-900 sm:col-span-2">{status}</p>
-            ) : null}
-          </form>
-        </div>
-      </section>
+              </div>
+            </div>
+            <div className="mt-6">
+              <p className="text-sm font-black text-slate-700">Categoría</p>
+              <div className="mt-2 grid gap-2">
+                <label className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <input type="radio" checked={activeCategory === ""} onChange={() => setActiveCategory("")} />
+                  Todas
+                </label>
+                {directoryCategories.map((category) => (
+                  <label key={category.name} className="flex items-center gap-2 text-sm font-semibold text-slate-700">
+                    <input type="radio" checked={activeCategory === category.name} onChange={() => setActiveCategory(category.name)} />
+                    {displayCategory(category.name)}
+                  </label>
+                ))}
+              </div>
+            </div>
+          </aside>
+
+          <div>
+            <div className="rounded-[2rem] bg-white p-4 shadow-soft md:p-5">
+              <div className="grid gap-3 md:grid-cols-[1fr_auto] md:items-end">
+                <label className="relative block">
+                  <span className="mb-2 block text-sm font-black text-slate-700">Buscar en el directorio</span>
+                  <SearchIcon className="absolute bottom-4 left-4 h-5 w-5 text-slate-400" />
+                  <input
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    className="h-12 w-full rounded-2xl border border-slate-200 bg-white pl-11 pr-4 font-semibold outline-none ring-red-600/20 placeholder:text-slate-400 focus:border-red-500 focus:ring-4"
+                    type="search"
+                    placeholder="Ferretería, arreglo de ventiladores, domicilios..."
+                  />
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setActiveCategory("");
+                    setActiveMunicipality("");
+                    setQuery("");
+                  }}
+                  className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-slate-100 px-5 font-black text-slate-900 hover:bg-slate-200"
+                >
+                  Limpiar
+                </button>
+              </div>
+
+              <div className="mt-4 flex gap-2 overflow-x-auto pb-1 md:hidden">
+                <button type="button" onClick={() => setActiveCategory("")} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === "" ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}>
+                  Todos
+                </button>
+                {directoryCategories.slice(0, 5).map((category) => (
+                  <button key={category.name} type="button" onClick={() => setActiveCategory(category.name)} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeCategory === category.name ? "bg-red-600 text-white" : "bg-slate-100 text-slate-700"}`}>
+                    {displayCategory(category.name)}
+                  </button>
+                ))}
+              </div>
+
+              <div className="mt-3 flex gap-2 overflow-x-auto pb-1 md:hidden">
+                {directoryMunicipalities.map((municipality) => (
+                  <button key={municipality} type="button" onClick={() => setActiveMunicipality((current) => (current === municipality ? "" : municipality))} className={`min-h-10 shrink-0 rounded-full px-4 text-sm font-black ${activeMunicipality === municipality ? "bg-emerald-700 text-white" : "bg-slate-100 text-slate-700"}`}>
+                    {municipality}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <p className="text-sm font-black uppercase tracking-normal text-red-600">Resultados</p>
+                <h2 className="text-2xl font-black text-slate-950">{resultsLabel}</h2>
+                <p className="mt-1 text-sm font-semibold text-slate-500">{directoryStatus}</p>
+              </div>
+              <span className="rounded-full bg-white px-4 py-2 text-sm font-black text-slate-700 shadow-soft">Ordenar por relevancia</span>
+            </div>
+
+            <div className="mt-4 grid gap-3">
+              {isDirectoryLoading ? (
+                <div className="rounded-[2rem] bg-white p-6 text-center font-bold text-slate-600 shadow-soft">Cargando negocios...</div>
+              ) : sortedBusinesses.length > 0 ? (
+                sortedBusinesses.map((business) => (
+                  <BusinessCard key={business.id} business={business} onOpen={setSelectedBusiness} />
+                ))
+              ) : (
+                <EmptyState
+                  query={query}
+                  municipality={activeMunicipality}
+                  onClearMunicipality={() => setActiveMunicipality("")}
+                  onClearSearch={() => setQuery("")}
+                />
+              )}
+            </div>
+          </div>
+        </section>
+
+        <section id="inscripcion" className="mx-auto mt-8 max-w-7xl px-4 pb-10 md:px-6">
+          <div className="grid gap-6 rounded-[2rem] bg-white p-5 shadow-soft md:grid-cols-[0.85fr_1.15fr] md:p-7">
+            <div>
+              <p className="text-sm font-black uppercase tracking-normal text-emerald-700">Inscripción gratuita</p>
+              <h2 className="mt-2 text-3xl font-black leading-tight text-slate-950 md:text-4xl">
+                Inscribe tu negocio en Mercáu
+              </h2>
+              <p className="mt-3 leading-7 text-slate-600">
+                El formulario está pensado para celular. Tu solicitud queda en revisión y se publica cuando Mercáu apruebe la información.
+              </p>
+              <div className="mt-5 grid gap-3 text-sm font-bold text-slate-700">
+                <p className="rounded-2xl bg-slate-50 p-4">1. Datos básicos del negocio.</p>
+                <p className="rounded-2xl bg-slate-50 p-4">2. Municipio, categoría y contacto.</p>
+                <p className="rounded-2xl bg-slate-50 p-4">3. Revisión antes de publicar.</p>
+              </div>
+            </div>
+
+            <form onSubmit={onSubmit} className="grid gap-3 sm:grid-cols-2">
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Nombre del negocio
+                <input name="businessName" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Propietario o contacto
+                <input name="ownerName" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                WhatsApp
+                <input name="whatsapp" required inputMode="tel" placeholder="Ej: 3001234567" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Categoría
+                <select name="category" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20">
+                  <option value="">Seleccionar categoría</option>
+                  {directoryCategories.map((category) => (
+                    <option key={category.name} value={category.name}>{displayCategory(category.name)}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Municipio
+                <select name="municipality" required className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20">
+                  <option value="">Seleccionar municipio</option>
+                  {directoryMunicipalities.map((municipality) => (
+                    <option key={municipality} value={municipality}>{municipality}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Barrio o vereda
+                <input name="neighborhood" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800 sm:col-span-2">
+                Descripción corta
+                <textarea name="description" required rows={3} className="rounded-2xl border border-slate-200 px-4 py-3 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Horario
+                <input name="hours" placeholder="Ej: lunes a sábado" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Domicilios
+                <select name="deliveries" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20">
+                  <option>Consultar</option>
+                  <option value="Si">Sí</option>
+                  <option>No</option>
+                </select>
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Instagram o usuario
+                <input name="instagram" type="text" placeholder="@minegocio" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <label className="grid gap-2 text-sm font-black text-slate-800">
+                Facebook o página
+                <input name="facebook" type="text" placeholder="Mi Negocio" className="min-h-12 rounded-2xl border border-slate-200 px-4 font-semibold outline-none focus:border-red-500 focus:ring-4 focus:ring-red-600/20" />
+              </label>
+              <input type="hidden" name="wantsMarketplace" value="Después" />
+              <button type="submit" disabled={isSubmitting} className="inline-flex min-h-12 items-center justify-center rounded-2xl bg-red-600 px-5 py-4 font-black text-white hover:bg-red-700 disabled:opacity-60 sm:col-span-2">
+                {isSubmitting ? "Enviando..." : "Enviar inscripción para revisión"}
+              </button>
+              {status ? <p className="rounded-2xl bg-emerald-50 p-4 font-bold text-emerald-900 sm:col-span-2">{status}</p> : null}
+            </form>
+          </div>
+        </section>
+
+        <footer className="border-t border-slate-200 bg-red-600 text-white">
+          <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-5 text-sm font-bold md:px-6">
+            <strong className="text-2xl font-black">Mercáu</strong>
+            <span>Cáceres · Caucasia · El Bagre · Nechí · Tarazá · Zaragoza</span>
+            <span>Negocios locales, más oportunidades.</span>
+          </div>
+        </footer>
+      </div>
+
+      <BottomNav />
+
       {selectedBusiness ? (
-        <BusinessDetailModal
-          business={selectedBusiness}
-          onClose={() => setSelectedBusiness(null)}
-        />
+        <BusinessDetailModal business={selectedBusiness} onClose={() => setSelectedBusiness(null)} />
       ) : null}
     </>
   );
