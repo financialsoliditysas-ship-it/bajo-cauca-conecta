@@ -119,6 +119,11 @@ function trackMetric(payload: Record<string, string>) {
   }).catch(() => {});
 }
 
+function businessUrl(business: DirectoryBusiness) {
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://www.mercau.co";
+  return `${origin}/negocios/${business.id}`;
+}
+
 function SearchIcon({ className = "h-5 w-5" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -285,6 +290,9 @@ function BusinessCard({
           <span className="hidden sm:inline">Llamar</span>
         </a>
       </div>
+      <a href={`/negocios/${business.id}`} className="mt-2 inline-flex text-xs font-black text-red-600">
+        Ver ficha completa
+      </a>
     </article>
   );
 }
@@ -297,11 +305,12 @@ function BusinessDetailModal({
   onClose: () => void;
 }) {
   const callPhone = phoneForCall(business.whatsapp);
-  const shareText = `Mira ${business.name} en Mercáu: https://www.mercau.co`;
+  const url = businessUrl(business);
+  const shareText = `Mira ${business.name} en Mercáu: ${url}`;
 
   async function shareBusiness() {
     if (navigator.share) {
-      await navigator.share({ title: business.name, text: shareText, url: "https://www.mercau.co" });
+      await navigator.share({ title: business.name, text: shareText, url });
       return;
     }
     await navigator.clipboard?.writeText(shareText);
