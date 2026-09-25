@@ -278,9 +278,9 @@ function BottomNav() {
 
 function BusinessVisual({ business, compact = false }: { business: DirectoryBusiness; compact?: boolean }) {
   return (
-    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl border border-[#F3D1CE] bg-[#FFF6F5] text-[#D82016] ${compact ? "h-20 w-20 sm:h-24 sm:w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
+    <div className={`relative grid shrink-0 place-items-center overflow-hidden rounded-2xl border border-[#F3D1CE] bg-[#FFF6F5] text-[#D82016] ${compact ? "h-24 w-20 sm:h-28 sm:w-24" : "h-28 w-28 md:h-32 md:w-32"}`}>
       <span className="absolute inset-x-0 bottom-0 h-1 bg-[#D82016]" />
-      <CategoryIcon category={business.category} className={compact ? "h-8 w-8" : "h-11 w-11"} />
+      <CategoryIcon category={business.category} className={compact ? "h-7 w-7" : "h-11 w-11"} />
     </div>
   );
 }
@@ -329,7 +329,7 @@ function BusinessCard({
         </div>
       </div>
 
-      <div className="mt-2 grid grid-cols-[1fr_auto] gap-1.5 sm:gap-2">
+      <div className="mt-2 flex justify-end gap-1.5 sm:gap-2">
         <a
           href={whatsappUrl(business.whatsapp, business.name)}
           target="_blank"
@@ -343,15 +343,15 @@ function BusinessCard({
               category: business.category
             })
           }
-          className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-black text-white sm:min-h-10 ${hasWhatsapp ? "bg-[#D82016] hover:bg-[#B91C1C]" : "pointer-events-none bg-slate-300"}`}
+          className={`inline-flex min-h-9 w-10 items-center justify-center gap-1.5 rounded-xl px-2 text-sm font-black text-white sm:min-h-10 sm:w-auto sm:px-3 ${hasWhatsapp ? "bg-[#D82016] hover:bg-[#B91C1C]" : "pointer-events-none bg-slate-300"}`}
         >
           <WhatsappIcon />
-          WhatsApp
+          <span className="hidden sm:inline">WhatsApp</span>
         </a>
         <a
           href={callPhone ? `tel:${callPhone}` : "#"}
           aria-disabled={!callPhone}
-          className={`inline-flex min-h-9 items-center justify-center gap-1.5 rounded-xl px-3 text-sm font-black sm:min-h-10 ${callPhone ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "pointer-events-none bg-slate-100 text-slate-400"}`}
+          className={`inline-flex min-h-9 w-10 items-center justify-center gap-1.5 rounded-xl px-2 text-sm font-black sm:min-h-10 sm:w-auto sm:px-3 ${callPhone ? "bg-slate-100 text-slate-900 hover:bg-slate-200" : "pointer-events-none bg-slate-100 text-slate-400"}`}
         >
           <PhoneIcon />
           <span className="hidden sm:inline">Llamar</span>
